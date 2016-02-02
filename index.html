@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <title>Tic Tac Toe</title>
+      <link rel='shortcut icon' href='assets/images/favicon.ico' type='image/x-icon'/ >
+      <link href='https://fonts.googleapis.com/css?family=Raleway:900' rel='stylesheet' type='text/css'>
+    </head>
+    <body>
+      <h1>tic tac toe</h1>
+      <div class='login'>
+        <div class='message'>You've been successfully logged out.</div>
+        <form class="sign-up">
+          <h2>Sign up...</h2>
+          <label>E-mail
+            <input type="text" name="credentials[email]" value="" placeholder="email">
+          </label>
+          <label>Password
+            <input type="password" name="credentials[password]" value="" placeholder="password">
+          </label>
+          <input type="submit" name="submit" value="Sign Up">
+        </form>
+        <br>
+        <form class="sign-in">
+          <h2>...or sign in</h2>
+          <label>E-mail
+            <input type="text" name="credentials[email]" value="" placeholder="email">
+          </label>
+          <label>Password
+            <input type="password" name="credentials[password]" value="" placeholder="password">
+          </label>
+          <input type="submit" name="submit" value="Sign In">
+        </form>
+      </div>
+      <div class='game'>
+        <div class='message'>You've been successfully logged in.</div>
+        <div class='password'>Your password has successfully been changed.</div>
+        <div class='board'>
+          <div class='square top left'></div>
+          <div class='square top center'></div>
+          <div class='square top right'></div>
+          <div class='square mid left'></div>
+          <div class='square mid center'></div>
+          <div class='square mid right'></div>
+          <div class='square bot left'></div>
+          <div class='square bot center'></div>
+          <div class='square bot right'></div>
+        </div>
+        <div class='newgame'></div>
+        <table>
+          <tr>
+            <td> X </td>
+            <td>Ties</td>
+            <td> O </td>
+          </tr>
+          <tr>
+            <td id='xWins'>0</td>
+            <td id='ties'>0</td>
+            <td id='oWins'>0</td>
+          </tr>
+        </table>
+        <div class="floater">1</div>
+        <form id="sign-out">
+          <input type="submit" name="submit" value="Sign out">
+        </form>
+        <form id="change-pw">
+          <p>Change password</p>
+          <label>Old password
+            <input type="password" class="password-field" name="passwords[old]" value="" placeholder="old password">
+          </label>
+          <label>New Password
+            <input type="password" class="password-field" name="passwords[new]" value="" placeholder="new password">
+          </label>
+          <input type="submit" name="submit" value="Update">
+        </form>
+      </div>
+
+
+      <script src="http://localhost:8080/webpack-dev-server.js"></script>
+      <script src="vendor.bundle.js" type="text/javascript" charset="utf-8"></script>
+      <script src="bundle.js" type="text/javascript" charset="utf-8"></script>
+    </body>
+</html>

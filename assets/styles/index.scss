@@ -1,0 +1,146 @@
+$icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
+@import '~bootstrap-sass/assets/stylesheets/bootstrap';
+
+
+$background-color: #000;
+$font-color: #458b00;
+$white: #fff;
+$black: #000;
+$blue: #0198e1;
+$gray: #282828;
+
+body {
+  background-color: $background-color;
+  color: $font-color;
+  font-family: 'Raleway', sans-serif;
+  text-align: center;
+}
+
+table {
+  color: $white;
+  font-size: 200%;
+  margin: 0 auto;
+  width: 70%;
+}
+
+.message,
+.password {
+  background-color: $blue;
+  height: 10%;
+  margin: 0 auto;
+  margin-top: 15%;
+  opacity: 10%;
+  padding-top: 2%;
+  position: fixed;
+  text-align: center;
+  width: 400px;
+}
+
+.floater {
+  background-color: $blue;
+  border-radius: 50%;
+  bottom: 50px;
+  box-shadow: 2px 2px 5px $white;
+  cursor: pointer;
+  height: 60px;
+  line-height: 60px;
+  position: fixed;
+  right: 50px;
+  text-align: center;
+  width: 60px;
+}
+
+.sign-up {
+  border: 1px solid $white;
+  padding: 20px;
+}
+
+.sign-in {
+  border: 1px solid $white;
+  padding: 20px;
+}
+
+// this will be applied for browsers up to 300px wide
+// @media (max-width: 900px) {
+//   div {
+//     color: $white;
+//     height: 100px;
+//     width: 100px;
+//   }
+// }
+
+// this will be applied for browsers up to 1400px wide
+@media (max-width: 1440px) {
+  div {
+    color: $white;
+    height: 30%;
+    width: 33%;
+  }
+}
+
+.game {
+  height: 400px;
+  margin: 0 auto;
+  width: 400px;
+}
+
+.login {
+  height: 450px;
+  margin: 0 auto;
+  text-align: left;
+  width: 450px;
+}
+
+.board {
+  cursor: pointer;
+  height: 100%;
+  width: 100%;
+}
+
+.newgame {
+  cursor: pointer;
+  height: 100%;
+  margin: 0 auto;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+
+.square {
+  color: $white;
+  float: left;
+  font-size: 600%;
+  padding-top: 2%;
+}
+
+.square:hover {
+  background-color: $blue;
+  opacity: .4;
+}
+
+.center {
+  border-left: 2px solid $white;
+  border-right: 2px solid $white;
+}
+
+.mid {
+  border-bottom: 2px solid $white;
+  border-top: 2px solid $white;
+}
+
+.left {
+  clear: left;
+}
+
+.white {
+  background-color: $white;
+}
+
+.blue {
+  color: $blue;
+}
+
+.gray {
+  color: $gray;
+}
