@@ -70,13 +70,13 @@ table {
 // }
 
 // this will be applied for browsers up to 1400px wide
-@media (max-width: 1440px) {
-  div {
-    color: $white;
-    height: 30%;
-    width: 33%;
-  }
-}
+// @media (max-width: 1440px) {
+//   div {
+//     color: $white;
+//     height: 30%;
+//     width: 33%;
+//   }
+// }
 
 .game {
   height: 400px;
@@ -106,17 +106,22 @@ table {
   width: 100%;
 }
 
-
 .square {
   color: $white;
   float: left;
   font-size: 600%;
+  height: 30%;
   padding-top: 2%;
+  width: 33%;
 }
 
 .square:hover {
   background-color: $blue;
   opacity: .4;
+}
+
+.btn {
+  margin: 10px;
 }
 
 .center {

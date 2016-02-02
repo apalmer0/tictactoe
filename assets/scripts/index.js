@@ -17,9 +17,13 @@ $(document).ready(() => {
   if (!myApp.user) {
     $('.login').show();
     $('.game').hide();
+    $('.logged-out').show();
+    $('.logged-in').hide();
   } else {
     $('.login').hide();
     $('.game').show();
+    $('.logged-in').show();
+    $('.logged-out').hide();
   }
 
   $('.newgame').hide();
@@ -62,6 +66,8 @@ $(document).ready(() => {
       console.log(data);
       $('.login').hide();
       $('.game').show();
+      $('.logged-in').show();
+      $('.logged-out').hide();
       $(function() {
         $('.message').delay(50).fadeIn('normal', function() {
           $(this).delay(1000).fadeOut();
@@ -123,6 +129,8 @@ $(document).ready(() => {
       console.log(data);
       $('.login').show();
       $('.game').hide();
+      $('.logged-out').show();
+      $('.logged-in').hide();
       $(function() {
         $('.message').delay(50).fadeIn('normal', function() {
           $(this).delay(1000).fadeOut();
@@ -133,9 +141,9 @@ $(document).ready(() => {
     });
   });
 
-  $('.floater').on('click',function() {
+  $('.players').on('click',function() {
     $(this).text(function(i, text){
-      return text === "1" ? "2" : "1";
+      return text === "One player" ? "Two players" : "One player";
     });
   });
 
