@@ -47,14 +47,28 @@
           </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
       </nav>
+      <!-- end navbar -->
 
-      <div class='login'>
-      <div class='message'>You've been successfully logged out.</div>
-
+      <!-- pop-up messages -->
+      <div class="alert alert-success alert-dismissible message" role="alert">
+        <strong>Welcome!</strong> You've been logged in. Prepare to tic tac toe your freaking face off.
       </div>
+      <div class="alert alert-info alert-dismissible password" role="alert">
+        <strong>Booyah!</strong> Your password has been changed.
+      </div>
+      <div class="alert alert-info alert-dismissible winner-message" role="alert">
+        <strong>Huzzah!</strong> <span id='winner'></span> won this round.
+      </div>
+      <div class="alert alert-warning alert-dismissible tie-message" role="alert">
+        <strong>Bummer.</strong> Somehow you both lost.
+      </div>
+      <div class="alert alert-info alert-dismissible message-signout" role="alert">
+        <strong>Adios!</strong> You've been signed out.
+      </div>
+      <!-- pop-up messages -->
+
+      <!-- game board -->
       <div class='game'>
-        <div class='message'>You've been successfully logged in.</div>
-        <div class='password'>Your password has successfully been changed.</div>
         <div class='board'>
           <div class='square top left'></div>
           <div class='square top center'></div>
@@ -67,6 +81,8 @@
           <div class='square bot right'></div>
         </div>
         <div class='newgame'></div>
+        <!-- game board -->
+        <!-- score board -->
         <table>
           <tr>
             <td> X </td>
@@ -79,9 +95,10 @@
             <td id='oWins'>0</td>
           </tr>
         </table>
+        <!-- score board -->
       </div>
 
-      <!-- Sign up Modal -->
+      <!-- vvvv Sign up Modal vvvv -->
       <div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -112,8 +129,9 @@
           </form>
         </div>
       </div>
+      <!-- ^^^^ Sign up Modal ^^^^ -->
 
-      <!-- Sign in Modal -->
+      <!-- vvvv Sign in Modal vvvv -->
       <div class="modal fade" id="signInModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -144,8 +162,9 @@
           </div>
         </div>
       </div>
+      <!-- ^^^^ Sign in Modal ^^^^ -->
 
-      <!-- Change password Modal -->
+      <!-- vvvv Change password Modal vvvv -->
       <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -176,6 +195,7 @@
           </div>
         </div>
       </div>
+      <!-- ^^^^ Change password Modal ^^^^ -->
 
       <script src="http://localhost:8080/webpack-dev-server.js"></script>
       <script src="vendor.bundle.js" type="text/javascript" charset="utf-8"></script>

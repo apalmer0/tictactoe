@@ -28,6 +28,9 @@ $(document).ready(() => {
 
   $('.newgame').hide();
   $('.message').hide();
+  $('.message-signout').hide();
+  $('.winner-message').hide();
+  $('.tie-message').hide();
   $('.password').hide();
 
   $('.sign-up').on('submit', function(e) {
@@ -43,6 +46,8 @@ $(document).ready(() => {
       console.log(data);
       $('.login').hide();
       $('.game').show();
+      $('.modal').hide();
+      $('.modal-backdrop').hide();
       $(function() {
         $('.message').delay(50).fadeIn('normal', function() {
           $(this).delay(1000).fadeOut();
@@ -68,9 +73,11 @@ $(document).ready(() => {
       $('.game').show();
       $('.logged-in').show();
       $('.logged-out').hide();
+      $('.modal').hide();
+      $('.modal-backdrop').hide();
       $(function() {
         $('.message').delay(50).fadeIn('normal', function() {
-          $(this).delay(1000).fadeOut();
+          $(this).delay(1500).fadeOut();
         });
       });
       myApp.user = data.user;
@@ -99,9 +106,11 @@ $(document).ready(() => {
       console.log(data);
       console.log('success');
       $('.password-field').val('');
+      $('.modal').hide();
+      $('.modal-backdrop').hide();
       $(function() {
         $('.password').delay(50).fadeIn('normal', function() {
-          $(this).delay(1000).fadeOut();
+          $(this).delay(1500).fadeOut();
         });
       });
     }).fail(function(jqxhr) {
@@ -131,9 +140,11 @@ $(document).ready(() => {
       $('.game').hide();
       $('.logged-out').show();
       $('.logged-in').hide();
+      $('.modal').hide();
+      $('.modal-backdrop').hide();
       $(function() {
-        $('.message').delay(50).fadeIn('normal', function() {
-          $(this).delay(1000).fadeOut();
+        $('.message-signout').delay(50).fadeIn('normal', function() {
+          $(this).delay(1500).fadeOut();
         });
       });
     }).fail(function(jqxhr) {
@@ -174,11 +185,16 @@ $(document).ready(() => {
         $(b).addClass('blue');
         $(c).addClass('blue');
         winner = $(a).text();
+        $('#winner').text(winner);
+        $(function() {
+          $('.winner-message').delay(50).fadeIn('normal', function() {
+            $(this).delay(1500).fadeOut();
+          });
+        });
         if (winner === 'X') {
           xWinCount++;
         } else if (winner === 'O') {
           oWinCount++;
-
         }
 
         return true;
@@ -189,6 +205,11 @@ $(document).ready(() => {
     if (count === 9) {
       tieCount++;
       tieBoard();
+      $(function() {
+        $('.tie-message').delay(50).fadeIn('normal', function() {
+          $(this).delay(1500).fadeOut();
+        });
+      });
       return true;
     }
   };

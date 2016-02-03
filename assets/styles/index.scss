@@ -24,40 +24,12 @@ table {
 }
 
 .message,
+.winner-message,
+.tie-message,
+.message-signout,
 .password {
-  background-color: $blue;
-  height: 10%;
-  margin: 0 auto;
-  margin-top: 15%;
-  opacity: 10%;
-  padding-top: 2%;
   position: fixed;
-  text-align: center;
-  width: 400px;
-}
-
-.floater {
-  background-color: $blue;
-  border-radius: 50%;
-  bottom: 50px;
-  box-shadow: 2px 2px 5px $white;
-  cursor: pointer;
-  height: 60px;
-  line-height: 60px;
-  position: fixed;
-  right: 50px;
-  text-align: center;
-  width: 60px;
-}
-
-.sign-up {
-  border: 1px solid $white;
-  padding: 20px;
-}
-
-.sign-in {
-  border: 1px solid $white;
-  padding: 20px;
+  width: 100%;
 }
 
 // this will be applied for browsers up to 300px wide
