@@ -8,6 +8,7 @@ $white: #fff;
 $black: #000;
 $blue: #0198e1;
 $gray: #282828;
+$red: #f00;
 
 html,
 body {
@@ -44,6 +45,18 @@ table {
   margin: 0 auto;
 }
 
+.all-games {
+  color: $font-color;
+  font-size: 90%;
+  width: 60%;
+}
+
+.modal-body {
+  max-height: calc(100vh - 210px);
+  overflow-y: auto;
+}
+
+
 .login {
   background-color: $blue;
   height: 1000px;
@@ -54,8 +67,20 @@ table {
   background-color: $white;
 }
 
+.wrong-password {
+  color: $red;
+}
+
 .navbar {
   z-index: 1;
+}
+
+.test {
+  background-color: $blue;
+  cursor: pointer;
+  height: 100px;
+  margin: 0 auto;
+  width: 100px;
 }
 
 // this will be applied for browsers up to 563px wide
@@ -87,7 +112,7 @@ table {
 }
 
 
-.newgame {
+.restart {
   cursor: pointer;
   height: 100%;
   margin: 0 auto;
