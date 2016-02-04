@@ -55,6 +55,8 @@ $(document).ready(() => {
 
   var hideModal = function hideModal() {
     $('.modal').hide();
+    $('.modal').removeClass('in');
+    $('.modal').attr('style','display: none;');
     $('.modal-backdrop').hide();
   };
 
@@ -174,7 +176,7 @@ $(document).ready(() => {
   // ^^ signin actions ^^
 
   // vv get all games actions vv
-  $('#get-games').on('submit', function (e) {
+  $('#get-games').on('click', function (e) {
     e.preventDefault();
     $.ajax({
       url: myApp.baseUrl + '/games?over=true',
@@ -185,7 +187,7 @@ $(document).ready(() => {
       data: {},
     }).done(function (data) {
       for (let i = 0; i < data.games.length; i++) {
-        $('.all-games').append('<tr><td>' + data.games[i].id + '</td><td>' + data.games[i].player_o + '</td><td>' + data.games[i].cells + '<td><button id=' + data.games[i].id + '>View</button></td></tr>');
+        $('.all-games').append('<tr><td>' + data.games[i].id + '</td><td>' + data.games[i].player_o + '</td><td>' + data.games[i].cells + '<td><button data-dismiss="modal" id=' + data.games[i].id + '>View</button></td></tr>');
       }
     }).fail(function (jqxhr) {
       console.error(jqxhr);
@@ -384,8 +386,8 @@ $(document).ready(() => {
       }
 
       updateBoard();
-      hideModal();
       findAndAnnounceWinner(event);
+      $('.restart').show();
     }).fail(function (jqxhr) {
       console.error(jqxhr);
     });
@@ -420,60 +422,43 @@ $(document).ready(() => {
     createGame(event);
   });
 
+  let updateSquare = function updateSquare(e) {
+    e.preventDefault();
+    $.ajax({
+      url: myApp.baseUrl + '/games/' + myApp.game.id,
+      headers: {
+        Authorization: 'Token token=' + myApp.user.token,
+      },
+      type: 'PATCH',
+      data: {
+        game: {
+          cell: {
+            index: event.target.id,
+            value: $(event.target).text(),
+          },
+          over: false,
+        },
+      },
+    }).done(function (data) {
+      myApp.game = data.game;
+      console.log(myApp.game);
+      console.log('yo from updateSquare!');
+    }).fail(function (jqxhr) {
+      console.error(jqxhr);
+    });
+  };
+
   $('.square').on('click', function (e) {
     if (count % 2 === 0) {
       if ($(this).text() !== 'O') {
         $(this).text('X');
-        e.preventDefault();
-        $.ajax({
-          url: myApp.baseUrl + '/games/' + myApp.game.id,
-          headers: {
-            Authorization: 'Token token=' + myApp.user.token,
-          },
-          type: 'PATCH',
-          data: {
-            game: {
-              cell: {
-                index: event.target.id,
-                value: $(event.target).text(),
-              },
-              over: false,
-            },
-          },
-        }).done(function (data) {
-          myApp.game = data.game;
-          console.log(myApp.game);
-          console.log(myApp.game.cells[1]);
-        }).fail(function (jqxhr) {
-          console.error(jqxhr);
-        });
+        updateSquare(e);
         count++;
       }
     } else {
       if ($(this).text() !== 'X') {
         $(this).text('O');
-        e.preventDefault();
-        $.ajax({
-          url: myApp.baseUrl + '/games/' + myApp.game.id,
-          headers: {
-            Authorization: 'Token token=' + myApp.user.token,
-          },
-          type: 'PATCH',
-          data: {
-            game: {
-              cell: {
-                index: event.target.id,
-                value: $(event.target).text(),
-              },
-              over: false,
-            },
-          },
-        }).done(function (data) {
-          myApp.game = data.game;
-          console.log(myApp.game);
-        }).fail(function (jqxhr) {
-          console.error(jqxhr);
-        });
+        updateSquare(e);
         count++;
       }
     }
