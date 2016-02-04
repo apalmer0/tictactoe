@@ -8,6 +8,7 @@ $white: #fff;
 $black: #000;
 $blue: #0198e1;
 $gray: #282828;
+$red: #f00;
 
 html,
 body {
@@ -66,6 +67,10 @@ table {
   background-color: $white;
 }
 
+.wrong-password {
+  color: $red;
+}
+
 .navbar {
   z-index: 1;
 }
@@ -107,7 +112,7 @@ table {
 }
 
 
-.newgame {
+.restart {
   cursor: pointer;
   height: 100%;
   margin: 0 auto;
