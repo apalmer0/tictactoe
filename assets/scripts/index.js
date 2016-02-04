@@ -422,60 +422,43 @@ $(document).ready(() => {
     createGame(event);
   });
 
+  let updateSquare = function updateSquare(e) {
+    e.preventDefault();
+    $.ajax({
+      url: myApp.baseUrl + '/games/' + myApp.game.id,
+      headers: {
+        Authorization: 'Token token=' + myApp.user.token,
+      },
+      type: 'PATCH',
+      data: {
+        game: {
+          cell: {
+            index: event.target.id,
+            value: $(event.target).text(),
+          },
+          over: false,
+        },
+      },
+    }).done(function (data) {
+      myApp.game = data.game;
+      console.log(myApp.game);
+      console.log('yo from updateSquare!');
+    }).fail(function (jqxhr) {
+      console.error(jqxhr);
+    });
+  };
+
   $('.square').on('click', function (e) {
     if (count % 2 === 0) {
       if ($(this).text() !== 'O') {
         $(this).text('X');
-        e.preventDefault();
-        $.ajax({
-          url: myApp.baseUrl + '/games/' + myApp.game.id,
-          headers: {
-            Authorization: 'Token token=' + myApp.user.token,
-          },
-          type: 'PATCH',
-          data: {
-            game: {
-              cell: {
-                index: event.target.id,
-                value: $(event.target).text(),
-              },
-              over: false,
-            },
-          },
-        }).done(function (data) {
-          myApp.game = data.game;
-          console.log(myApp.game);
-          console.log(myApp.game.cells[1]);
-        }).fail(function (jqxhr) {
-          console.error(jqxhr);
-        });
+        updateSquare(e);
         count++;
       }
     } else {
       if ($(this).text() !== 'X') {
         $(this).text('O');
-        e.preventDefault();
-        $.ajax({
-          url: myApp.baseUrl + '/games/' + myApp.game.id,
-          headers: {
-            Authorization: 'Token token=' + myApp.user.token,
-          },
-          type: 'PATCH',
-          data: {
-            game: {
-              cell: {
-                index: event.target.id,
-                value: $(event.target).text(),
-              },
-              over: false,
-            },
-          },
-        }).done(function (data) {
-          myApp.game = data.game;
-          console.log(myApp.game);
-        }).fail(function (jqxhr) {
-          console.error(jqxhr);
-        });
+        updateSquare(e);
         count++;
       }
     }
