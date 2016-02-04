@@ -4,6 +4,7 @@
       <title>Tic Tac Toe</title>
       <link rel='shortcut icon' href='assets/images/favicon.ico' type='image/x-icon'/ >
       <link href='https://fonts.googleapis.com/css?family=Raleway:900' rel='stylesheet' type='text/css'>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
       <nav class="navbar navbar-default">
@@ -26,7 +27,12 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <li>
-                <button type="button" class="btn btn-primary logged-in" data-toggle="modal" data-target="#changePasswordModal">
+                <form class="nav navbar-nav navbar-right logged-in" id="create-new">
+                  <button type="submit" name="submit" class="btn btn-success">Create new game</button>
+                </form>
+              </li>
+              <li>
+                <button type="button" class="btn btn-primary logged-in modal-button" data-toggle="modal" data-target="#changePasswordModal">
                   Change password
                 </button>
               </li>
@@ -36,10 +42,10 @@
                 </form>
               </li>
               <li>
-                <button type="button" class="btn btn-primary logged-out" data-toggle="modal" data-target="#signUpModal">
+                <button type="button" class="btn btn-primary logged-out modal-button" data-toggle="modal" data-target="#signUpModal">
                   Sign up
                 </button>
-                <button type="button" class="btn btn-default logged-out" data-toggle="modal" data-target="#signInModal">
+                <button type="button" class="btn btn-default logged-out modal-button" data-toggle="modal" data-target="#signInModal">
                   Sign in
                 </button>
               </li>
@@ -65,24 +71,41 @@
       <div class="alert alert-info alert-dismissible message-signout" role="alert">
         <strong>Adios!</strong> You've been signed out.
       </div>
+      <div class="alert alert-warning alert-dismissible message-account-exists" role="alert">
+        <strong>Hey!</strong> You've already got an account. Try signing in.
+      </div>
       <!-- pop-up messages -->
+
+      <div class="login">
+        <div class="section1">
+        </div>
+
+      </div>
 
       <!-- game board -->
       <div class='game'>
         <div class='board'>
-          <div class='square top left'></div>
-          <div class='square top center'></div>
-          <div class='square top right'></div>
-          <div class='square mid left'></div>
-          <div class='square mid center'></div>
-          <div class='square mid right'></div>
-          <div class='square bot left'></div>
-          <div class='square bot center'></div>
-          <div class='square bot right'></div>
+          <div class='square top left' id=0></div>
+          <div class='square top center' id=1></div>
+          <div class='square top right' id=2></div>
+          <div class='square mid left' id=3></div>
+          <div class='square mid center' id=4></div>
+          <div class='square mid right' id=5></div>
+          <div class='square bot left' id=6></div>
+          <div class='square bot center' id=7></div>
+          <div class='square bot right' id=8></div>
         </div>
         <div class='newgame'></div>
         <!-- game board -->
         <!-- score board -->
+        <div class="progress">
+          <div class="progress-bar progress-bar-success xProgressBar" style="width: 0%">
+          </div>
+          <div class="progress-bar progress-bar-info tieProgressBar" style="width: 0%">
+          </div>
+          <div class="progress-bar progress-bar-danger oProgressBar" style="width: 0%">
+          </div>
+        </div>
         <table>
           <tr>
             <td> X </td>

@@ -9,65 +9,83 @@ $black: #000;
 $blue: #0198e1;
 $gray: #282828;
 
+html,
 body {
   background-color: $background-color;
   color: $font-color;
   font-family: 'Raleway', sans-serif;
+  height: 100%;
   text-align: center;
-}
-
-table {
-  color: $white;
-  font-size: 200%;
-  margin: 0 auto;
-  width: 70%;
+  width: 100%;
 }
 
 .message,
 .winner-message,
 .tie-message,
 .message-signout,
-.password {
+.password,
+.message-account-exists {
+  font-family: sans-serif;
   position: fixed;
   width: 100%;
 }
 
-// this will be applied for browsers up to 300px wide
-// @media (max-width: 900px) {
-//   div {
-//     color: $white;
-//     height: 100px;
-//     width: 100px;
-//   }
-// }
-
-// this will be applied for browsers up to 1400px wide
-// @media (max-width: 1440px) {
-//   div {
-//     color: $white;
-//     height: 30%;
-//     width: 33%;
-//   }
-// }
-
 .game {
-  height: 400px;
+  height: 100%;
   margin: 0 auto;
-  width: 400px;
+  margin-top: 20px;
+  width: 100%;
+}
+
+table {
+  color: $white;
+  font-size: 200%;
+  height: 20%;
+  margin: 0 auto;
 }
 
 .login {
-  height: 450px;
-  margin: 0 auto;
-  text-align: left;
-  width: 450px;
-}
-
-.board {
-  cursor: pointer;
-  height: 100%;
+  background-color: $blue;
+  height: 1000px;
   width: 100%;
 }
+
+.section1 {
+  background-color: $white;
+}
+
+.navbar {
+  z-index: 1;
+}
+
+// this will be applied for browsers up to 563px wide
+@media (max-width: 500px) {
+  .board {
+    cursor: pointer;
+    height: 60%;
+    margin: 0 auto;
+    width: 80%;
+  }
+
+  table {
+    width: 70%;
+  }
+}
+
+// this will be applied for browsers bigger than 564px wide
+@media (min-width: 501px) {
+  .board {
+    cursor: pointer;
+    height: 350px;
+    margin: 0 auto;
+    width: 400px;
+  }
+
+  table {
+    width: 40%;
+  }
+}
+
 
 .newgame {
   cursor: pointer;
@@ -81,14 +99,13 @@ table {
 .square {
   color: $white;
   float: left;
-  font-size: 600%;
+  font-size: 500%;
   height: 30%;
-  padding-top: 2%;
   width: 33%;
 }
 
 .square:hover {
-  background-color: $blue;
+  background-color: $gray;
   opacity: .4;
 }
 

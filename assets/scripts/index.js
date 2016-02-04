@@ -14,6 +14,7 @@ const myApp = {
 };
 
 $(document).ready(() => {
+  // initial page setup
   if (!myApp.user) {
     $('.login').show();
     $('.game').hide();
@@ -32,8 +33,59 @@ $(document).ready(() => {
   $('.winner-message').hide();
   $('.tie-message').hide();
   $('.password').hide();
+  $('.message-account-exists').hide();
 
-  $('.sign-up').on('submit', function(e) {
+  $('.modal-button').on('click', function () {
+    $('.navbar-collapse').removeClass('in');
+  });
+
+  let createGame =  function(event) {
+    event.preventDefault();
+    var formData = new FormData(event.target);
+    $.ajax({
+      url: myApp.baseUrl + '/games',
+      headers: {
+        Authorization: 'Token token=' + myApp.user.token,
+      },
+      method: 'POST',
+      contentType: false,
+      processData: false,
+      data: formData,
+    }).done(function (data) {
+      console.log(data);
+      console.log('game created');
+      myApp.game = data.game;
+      console.log(myApp.game);
+    }).fail(function (jqxhr) {
+      console.error(jqxhr);
+    });
+  };
+
+  let endGame =  function(event) {
+    console.log('endGame');
+    event.preventDefault();
+    $.ajax({
+      url: myApp.baseUrl + '/games/' + myApp.game.id,
+      headers: {
+        Authorization: 'Token token=' + myApp.user.token,
+      },
+      type: 'PATCH',
+      data: {
+        game: {
+          over: true,
+        },
+      },
+    }).done(function (data) {
+      console.log('end game done');
+      myApp.game = data.game;
+      console.log(myApp.game);
+    }).fail(function (jqxhr) {
+      console.error(jqxhr);
+    });
+  };
+
+  // vv signup actions vv
+  $('.sign-up').on('submit', function (e) {
     e.preventDefault();
     var formData = new FormData(e.target);
     $.ajax({
@@ -42,23 +94,37 @@ $(document).ready(() => {
       contentType: false,
       processData: false,
       data: formData,
-    }).done(function(data) {
+    }).done(function (data) {
       console.log(data);
+      myApp.user = data.user;
       $('.login').hide();
       $('.game').show();
       $('.modal').hide();
       $('.modal-backdrop').hide();
-      $(function() {
-        $('.message').delay(50).fadeIn('normal', function() {
-          $(this).delay(1000).fadeOut();
+      $('.logged-in').show();
+      $('.logged-out').hide();
+      createGame(e);
+      $(function () {
+        $('.message').delay(50).fadeIn('normal', function () {
+          $(this).delay(1500).fadeOut();
         });
       });
-    }).fail(function(jqxhr) {
+    }).fail(function (jqxhr) {
       console.error(jqxhr);
+      $('.modal').hide();
+      $('.modal-backdrop').hide();
+      $(function () {
+        $('.message-account-exists').delay(50).fadeIn('normal', function () {
+          $(this).delay(1500).fadeOut();
+        });
+      });
     });
   });
 
-  $('.sign-in').on('submit', function(e) {
+  // ^^ signup actions ^^
+
+  // vv signin actions vv
+  $('.sign-in').on('submit', function (e) {
     e.preventDefault();
     var formData = new FormData(e.target);
     $.ajax({
@@ -67,7 +133,8 @@ $(document).ready(() => {
       contentType: false,
       processData: false,
       data: formData,
-    }).done(function(data) {
+    }).done(function (data) {
+      myApp.user = data.user;
       console.log(data);
       $('.login').hide();
       $('.game').show();
@@ -75,18 +142,58 @@ $(document).ready(() => {
       $('.logged-out').hide();
       $('.modal').hide();
       $('.modal-backdrop').hide();
-      $(function() {
-        $('.message').delay(50).fadeIn('normal', function() {
+      createGame(e);
+      $(function () {
+        $('.message').delay(50).fadeIn('normal', function () {
           $(this).delay(1500).fadeOut();
         });
       });
-      myApp.user = data.user;
-    }).fail(function(jqxhr) {
+    }).fail(function (jqxhr) {
       console.error(jqxhr);
     });
   });
 
-  $('#change-pw').on('submit', function(e) {
+  // ^^ signin actions ^^
+
+
+  // vv create new game actions vv
+  // $('#create-new').on('submit', function (e) {
+  //
+  // });
+
+  // ^^ create new game actions ^^
+
+  // vv update game actions vv
+  // $('#test').on('submit', function (e) {
+  //   e.preventDefault();
+  //   $.ajax({
+  //     url: myApp.baseUrl + '/games/' + myApp.game.id,
+  //     headers: {
+  //       Authorization: 'Token token=' + myApp.user.token,
+  //     },
+  //     type: 'PATCH',
+  //     data: {
+  //       'game': {
+  //         'cell': {
+  //           'index': 0,
+  //           'value': 'X'
+  //         },
+  //         'over': false
+  //       }
+  //     }
+  //   }).done(function (data) {
+  //     console.log(data);
+  //     myApp.game = data.game;
+  //     console.log(myApp.game);
+  //   }).fail(function (jqxhr) {
+  //     console.error(jqxhr);
+  //   });
+  // });
+
+  // ^^ update game actions ^^
+
+  // vv change password actions vv
+  $('#change-pw').on('submit', function (e) {
     e.preventDefault();
     if (!myApp.user) {
       console.error('Wrong!');
@@ -102,23 +209,26 @@ $(document).ready(() => {
       contentType: false,
       processData: false,
       data: formData,
-    }).done(function(data) {
+    }).done(function (data) {
       console.log(data);
       console.log('success');
       $('.password-field').val('');
       $('.modal').hide();
       $('.modal-backdrop').hide();
-      $(function() {
-        $('.password').delay(50).fadeIn('normal', function() {
+      $(function () {
+        $('.password').delay(50).fadeIn('normal', function () {
           $(this).delay(1500).fadeOut();
         });
       });
-    }).fail(function(jqxhr) {
+    }).fail(function (jqxhr) {
       console.error(jqxhr);
     });
   });
 
-  $('#sign-out').on('submit', function(e) {
+  // ^^ change password actions ^^
+
+  // vv sign out actions vv
+  $('#sign-out').on('submit', function (e) {
     e.preventDefault();
     if (!myApp.user) {
       console.error('Wrong!');
@@ -134,7 +244,7 @@ $(document).ready(() => {
       contentType: false,
       processData: false,
       data: formData,
-    }).done(function(data) {
+    }).done(function (data) {
       console.log(data);
       $('.login').show();
       $('.game').hide();
@@ -142,37 +252,77 @@ $(document).ready(() => {
       $('.logged-in').hide();
       $('.modal').hide();
       $('.modal-backdrop').hide();
-      $(function() {
-        $('.message-signout').delay(50).fadeIn('normal', function() {
+      $(function () {
+        $('.message-signout').delay(50).fadeIn('normal', function () {
           $(this).delay(1500).fadeOut();
         });
       });
-    }).fail(function(jqxhr) {
+    }).fail(function (jqxhr) {
       console.error(jqxhr);
     });
   });
 
-  $('.players').on('click',function() {
-    $(this).text(function(i, text){
-      return text === "One player" ? "Two players" : "One player";
-    });
-  });
+  // ^^ sign out actions ^^
 
   var count = 0;
   var xWinCount = $('#xWins').val() || 0;
   var oWinCount = $('#oWins').val() || 0;
   var tieCount = $('#ties').val() || 0;
+  var totalGames = 0;
+  var xPercent = 0;
+  var oPercent = 0;
+  var tiePercent =  0;
   var winner = '';
   var board = $('.board').children();
   var winningCombos = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
 
+  var updateProgressBars = function updateProgressBars() {
+    totalGames = (xWinCount + oWinCount + tieCount);
+    xPercent = Math.floor((xWinCount / totalGames) * 100);
+    oPercent = Math.floor((oWinCount / totalGames) * 100);
+    tiePercent = Math.floor((tieCount / totalGames) * 100);
+    $('.xProgressBar').attr('style', function () {
+      return 'width: ' + xPercent + '%';
+    });
+    $('.tieProgressBar').attr('style', function () {
+      return 'width: ' + tiePercent + '%';
+    });
+    $('.oProgressBar').attr('style', function () {
+      return 'width: ' + oPercent + '%';
+    });
+  };
+
   var tieBoard = function tieBoard() {
+    tieCount++;
+    updateProgressBars();
     for (let i = 0; i < board.length; i++) {
       $(board[i]).addClass('gray');
     }
+
+    $(function () {
+      $('.tie-message').delay(50).fadeIn('normal', function () {
+        $(this).delay(1500).fadeOut();
+      });
+    });
   };
 
-  var gameOver = function gameOver() {
+  var boardIsFull = function boardIsFull() {
+    for (let i = 0; i < board.length; i++) {
+      if ($(board[i]).text() === '') {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  var announceWinner = function announceWinner() {
+    $('.winner-message').delay(50).fadeIn('normal', function () {
+      $(this).delay(1500).fadeOut();
+    });
+  };
+
+  var gameOver = function gameOver(event) {
     for (let i = 0; i < winningCombos.length; i++) {
       var a, b, c;
 
@@ -186,30 +336,25 @@ $(document).ready(() => {
         $(c).addClass('blue');
         winner = $(a).text();
         $('#winner').text(winner);
-        $(function() {
-          $('.winner-message').delay(50).fadeIn('normal', function() {
-            $(this).delay(1500).fadeOut();
-          });
-        });
+
+        announceWinner();
         if (winner === 'X') {
           xWinCount++;
         } else if (winner === 'O') {
           oWinCount++;
         }
 
+        updateProgressBars();
+        console.log('gameover - end game');
+        endGame(event);
+
         return true;
       }
 
     }
 
-    if (count === 9) {
-      tieCount++;
+    if (boardIsFull()) {
       tieBoard();
-      $(function() {
-        $('.tie-message').delay(50).fadeIn('normal', function() {
-          $(this).delay(1500).fadeOut();
-        });
-      });
       return true;
     }
   };
@@ -221,28 +366,78 @@ $(document).ready(() => {
       $(board[i]).removeClass('gray');
     }
 
-    count = 0;
+    if (winner === 'X') {
+      count = 1;
+    } else {
+      count = 0;
+    }
+
     $('.newgame').hide();
   };
 
-  $('.newgame').on('click', function() {
+  $('.newgame').on('click', function (event) {
     clearBoard();
+    createGame(event);
   });
 
-  $('.square').on('click', function() {
+  $('.square').on('click', function (e) {
     if (count % 2 === 0) {
       if ($(this).text() !== 'O') {
         $(this).text('X');
+        e.preventDefault();
+        $.ajax({
+          url: myApp.baseUrl + '/games/' + myApp.game.id,
+          headers: {
+            Authorization: 'Token token=' + myApp.user.token,
+          },
+          type: 'PATCH',
+          data: {
+            game: {
+              cell: {
+                index: event.target.id,
+                value: 'X',
+              },
+              over: false,
+            },
+          },
+        }).done(function (data) {
+          myApp.game = data.game;
+          console.log(myApp.game);
+        }).fail(function (jqxhr) {
+          console.error(jqxhr);
+        });
         count++;
       }
     } else {
       if ($(this).text() !== 'X') {
         $(this).text('O');
+        e.preventDefault();
+        $.ajax({
+          url: myApp.baseUrl + '/games/' + myApp.game.id,
+          headers: {
+            Authorization: 'Token token=' + myApp.user.token,
+          },
+          type: 'PATCH',
+          data: {
+            game: {
+              cell: {
+                index: event.target.id,
+                value: 'O',
+              },
+              over: false,
+            },
+          },
+        }).done(function (data) {
+          myApp.game = data.game;
+          console.log(myApp.game);
+        }).fail(function (jqxhr) {
+          console.error(jqxhr);
+        });
         count++;
       }
     }
 
-    if (gameOver()) {
+    if (gameOver(e)) {
       $('#xWins').text(xWinCount);
       $('#oWins').text(oWinCount);
       $('#ties').text(tieCount);
