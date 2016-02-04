@@ -27,8 +27,8 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <li>
-                <form class="nav navbar-nav navbar-right logged-in" id="create-new">
-                  <button type="submit" name="submit" class="btn btn-success">Create new game</button>
+                <form class="nav navbar-nav navbar-right logged-in" data-toggle="modal" data-target="#allGamesModal" id="get-games">
+                  <button type="submit" name="submit" class="btn btn-success">Get games</button>
                 </form>
               </li>
               <li>
@@ -219,6 +219,32 @@
         </div>
       </div>
       <!-- ^^^^ Change password Modal ^^^^ -->
+
+      <!-- vvvv all games modal vvvv -->
+      <div class="modal fade" id="allGamesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h2 class="modal-title" id="myModalLabel">All games</h2>
+            </div>
+            <div class="modal-body">
+              <table class="all-games">
+                <tr class="all-games-table-row">
+                  <td> Id </td>
+                  <td> Over? </td>
+                  <td> Player O </td>
+                  <td> Player X </td>
+                </tr>
+              </table>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ^^^^ all games modal ^^^^ -->
 
       <script src="http://localhost:8080/webpack-dev-server.js"></script>
       <script src="vendor.bundle.js" type="text/javascript" charset="utf-8"></script>

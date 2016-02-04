@@ -44,6 +44,18 @@ table {
   margin: 0 auto;
 }
 
+.all-games {
+  color: $font-color;
+  font-size: 90%;
+  width: 60%;
+}
+
+.modal-body {
+  max-height: calc(100vh - 210px);
+  overflow-y: auto;
+}
+
+
 .login {
   background-color: $blue;
   height: 1000px;

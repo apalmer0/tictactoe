@@ -157,9 +157,23 @@ $(document).ready(() => {
 
 
   // vv create new game actions vv
-  // $('#create-new').on('submit', function (e) {
-  //
-  // });
+  $('#get-games').on('submit', function (e) {
+    e.preventDefault();
+    $.ajax({
+      url: myApp.baseUrl + '/games',
+      headers: {
+        Authorization: 'Token token=' + myApp.user.token,
+      },
+      type: 'GET',
+      data: {},
+    }).done(function (data) {
+      for (let i = 0; i < data.games.length; i++) {
+        $('.all-games').append("<tr><td>"+data.games[i].id+"</td><td>"+data.games[i].over+"</td><td>"+data.games[i].player_o+"</td><td>"+data.games[i].player_x.email+"</td></tr>");
+      }
+    }).fail(function (jqxhr) {
+      console.error(jqxhr);
+    });
+  });
 
   // ^^ create new game actions ^^
 
