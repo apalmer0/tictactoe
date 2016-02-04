@@ -156,11 +156,11 @@ $(document).ready(() => {
   // ^^ signin actions ^^
 
 
-  // vv create new game actions vv
+  // vv get all games actions vv
   $('#get-games').on('submit', function (e) {
     e.preventDefault();
     $.ajax({
-      url: myApp.baseUrl + '/games',
+      url: myApp.baseUrl + '/games?over=true',
       headers: {
         Authorization: 'Token token=' + myApp.user.token,
       },
@@ -168,43 +168,49 @@ $(document).ready(() => {
       data: {},
     }).done(function (data) {
       for (let i = 0; i < data.games.length; i++) {
-        $('.all-games').append("<tr><td>"+data.games[i].id+"</td><td>"+data.games[i].over+"</td><td>"+data.games[i].player_o+"</td><td>"+data.games[i].player_x.email+"</td></tr>");
+        $('.all-games').append("<tr><td>"+data.games[i].id+"</td><td>"+data.games[i].player_o+"</td><td>"+data.games[i].cells+"<td><button id="+data.games[i].id+">View</button></td></tr>");
       }
     }).fail(function (jqxhr) {
       console.error(jqxhr);
     });
   });
 
-  // ^^ create new game actions ^^
+  // ^^^ get all games actions ^^^
 
-  // vv update game actions vv
-  // $('#test').on('submit', function (e) {
-  //   e.preventDefault();
-  //   $.ajax({
-  //     url: myApp.baseUrl + '/games/' + myApp.game.id,
-  //     headers: {
-  //       Authorization: 'Token token=' + myApp.user.token,
-  //     },
-  //     type: 'PATCH',
-  //     data: {
-  //       'game': {
-  //         'cell': {
-  //           'index': 0,
-  //           'value': 'X'
-  //         },
-  //         'over': false
-  //       }
-  //     }
-  //   }).done(function (data) {
-  //     console.log(data);
-  //     myApp.game = data.game;
-  //     console.log(myApp.game);
-  //   }).fail(function (jqxhr) {
-  //     console.error(jqxhr);
-  //   });
-  // });
+  var archivedBoard = [];
 
-  // ^^ update game actions ^^
+  // vvv get single game action vvv
+  $('.all-games').on('click', "button", function (event) {
+    console.log('wahoo motherfuckers!');
+    event.preventDefault();
+    $.ajax({
+      url: myApp.baseUrl + '/games/' + event.target.id,
+      headers: {
+        Authorization: 'Token token=' + myApp.user.token,
+      },
+      type: 'GET',
+      data: {},
+    }).done(function (data) {
+      console.log('wahoo you found the game!');
+      console.log(data);
+      clearBoard();
+      console.log('board first: '+board);
+      for (let i = 0; i < data.game.cells.length; i++) {
+        console.log('push '+i);
+        archivedBoard[i] = data.game.cells[i];
+      }
+      updateBoard();
+      $('.modal').hide();
+      $('.modal-backdrop').hide();
+
+      console.log('board later: '+archivedBoard);
+      gameOver(event);
+    }).fail(function (jqxhr) {
+      console.error(jqxhr);
+    });
+  });
+
+  // ^^ get single game actions ^^
 
   // vv change password actions vv
   $('#change-pw').on('submit', function (e) {
@@ -334,6 +340,13 @@ $(document).ready(() => {
     $('.winner-message').delay(50).fadeIn('normal', function () {
       $(this).delay(1500).fadeOut();
     });
+  };
+
+  var updateBoard = function updateBoard() {
+    for (let i = 0; i < board.length; i++) {
+      $(board[i]).text(archivedBoard[i]);
+    }
+    console.log('board should be updated by now...');
   };
 
   var gameOver = function gameOver(event) {

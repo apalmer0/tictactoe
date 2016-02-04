@@ -70,6 +70,14 @@ table {
   z-index: 1;
 }
 
+.test {
+  background-color: $blue;
+  cursor: pointer;
+  height: 100px;
+  margin: 0 auto;
+  width: 100px;
+}
+
 // this will be applied for browsers up to 563px wide
 @media (max-width: 500px) {
   .board {
