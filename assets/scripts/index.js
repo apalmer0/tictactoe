@@ -34,12 +34,14 @@ $(document).ready(() => {
     $('.logged-in').show();
     $('.logged-out').hide();
   };
+
   var toggleLoggedOut = function toggleLoggedOut() {
     $('.login').show();
     $('.game').hide();
     $('.logged-out').show();
     $('.logged-in').hide();
   };
+
   var hidePageElements = function hidePageElements() {
     $('.restart').hide();
     $('.message').hide();
@@ -50,10 +52,12 @@ $(document).ready(() => {
     $('.wrong-password').hide();
     $('.message-account-exists').hide();
   };
+
   var hideModal = function hideModal() {
     $('.modal').hide();
     $('.modal-backdrop').hide();
   };
+
   var displayMessage = function displayMessage(type) {
     $(function () {
       $(type).delay(50).fadeIn('normal', function () {
@@ -77,8 +81,7 @@ $(document).ready(() => {
     $('.navbar-collapse').removeClass('in');
   });
 
-
-  let createGame =  function(event) {
+  let createGame =  function (event) {
     event.preventDefault();
     var formData = new FormData(event.target);
     $.ajax({
@@ -97,7 +100,7 @@ $(document).ready(() => {
     });
   };
 
-  let endGame =  function(event) {
+  let endGame =  function (event) {
     console.log('endGame');
     event.preventDefault();
     $.ajax({
@@ -113,6 +116,7 @@ $(document).ready(() => {
       },
     }).done(function (data) {
       console.log(data);
+
       //myApp.game = data.game;
     }).fail(function (jqxhr) {
       console.error(jqxhr);
@@ -169,7 +173,6 @@ $(document).ready(() => {
 
   // ^^ signin actions ^^
 
-
   // vv get all games actions vv
   $('#get-games').on('submit', function (e) {
     e.preventDefault();
@@ -182,7 +185,7 @@ $(document).ready(() => {
       data: {},
     }).done(function (data) {
       for (let i = 0; i < data.games.length; i++) {
-        $('.all-games').append("<tr><td>"+data.games[i].id+"</td><td>"+data.games[i].player_o+"</td><td>"+data.games[i].cells+"<td><button id="+data.games[i].id+">View</button></td></tr>");
+        $('.all-games').append('<tr><td>' + data.games[i].id + '</td><td>' + data.games[i].player_o + '</td><td>' + data.games[i].cells + '<td><button id=' + data.games[i].id + '>View</button></td></tr>');
       }
     }).fail(function (jqxhr) {
       console.error(jqxhr);
@@ -190,30 +193,6 @@ $(document).ready(() => {
   });
 
   // ^^^ get all games actions ^^^
-
-  // vvv get single game action vvv
-  $('.all-games').on('click', "button", function (event) {
-    event.preventDefault();
-    $.ajax({
-      url: myApp.baseUrl + '/games/' + event.target.id,
-      headers: {
-        Authorization: 'Token token=' + myApp.user.token,
-      },
-      type: 'GET',
-      data: {},
-    }).done(function (data) {
-      for (let i = 0; i < data.game.cells.length; i++) {
-        archivedBoard[i] = data.game.cells[i];
-      }
-      updateBoard();
-      hideModal();
-      findAndAnnounceWinner(event);
-    }).fail(function (jqxhr) {
-      console.error(jqxhr);
-    });
-  });
-
-  // ^^ get single game actions ^^
 
   // vv change password actions vv
   $('#change-pw').on('submit', function (event) {
@@ -272,16 +251,12 @@ $(document).ready(() => {
   // vvvvvvv start multiplayer game actions vvvvvvv
   $('#start-multiplayer-game').on('click', function (event) {
     event.preventDefault();
-    // var formData = new FormData(event.target);
     $.ajax({
       url: myApp.baseUrl + '/games',
       headers: {
         Authorization: 'Token token=' + myApp.user.token,
       },
       method: 'POST',
-      // contentType: false,
-      // processData: false,
-      // data: formData,
     }).done(function (data) {
       $('#multiplayerGameID').text(data.game.id);
       myApp.game = data.game;
@@ -296,6 +271,7 @@ $(document).ready(() => {
   // vvvvvvv join game actions vvvvvvv
   $('#join-game').on('submit', function (event) {
     event.preventDefault();
+
     //var formData = new FormData(event.target);
     $.ajax({
       url: myApp.baseUrl + '/games/' + $('#inputGameID').val(),
@@ -315,8 +291,6 @@ $(document).ready(() => {
   });
 
   // ^^^^^^ join game actions ^^^^^
-
-
 
   var updateProgressBars = function updateProgressBars() {
     totalGames = (xWinCount + oWinCount + tieCount);
@@ -394,6 +368,31 @@ $(document).ready(() => {
     }
   };
 
+  // vvv get single game action vvv
+  $('.all-games').on('click', 'button', function (event) {
+    event.preventDefault();
+    $.ajax({
+      url: myApp.baseUrl + '/games/' + event.target.id,
+      headers: {
+        Authorization: 'Token token=' + myApp.user.token,
+      },
+      type: 'GET',
+      data: {},
+    }).done(function (data) {
+      for (let i = 0; i < data.game.cells.length; i++) {
+        archivedBoard[i] = data.game.cells[i];
+      }
+
+      updateBoard();
+      hideModal();
+      findAndAnnounceWinner(event);
+    }).fail(function (jqxhr) {
+      console.error(jqxhr);
+    });
+  });
+
+  // ^^ get single game actions ^^
+
   // ensures the loser of the previous game goes first in the next game
   var loserGoesFirst = function loserGoesFirst() {
     if (winner === 'X') {
@@ -414,7 +413,6 @@ $(document).ready(() => {
 
     $('.restart').hide();
   };
-
 
   $('.restart').on('click', function (event) {
     resetBoard();
