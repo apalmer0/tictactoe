@@ -95,7 +95,7 @@ webpackJsonp([0],[
 	  var displayMessage = function displayMessage(type) {
 	    $(function () {
 	      $(type).delay(50).fadeIn('normal', function () {
-	        $(this).delay(1500).fadeOut();
+	        $(this).delay(2000).fadeOut();
 	      });
 	    });
 	  };
@@ -324,7 +324,7 @@ webpackJsonp([0],[
 	    $('.restart').hide();
 	  };
 
-	  var timer = setInterval(reprint, 1000);
+	  var timer = setInterval(reprint, 500);
 
 	  // vvvvvvv start multiplayer game actions vvvvvvv
 	  $('#start-multiplayer-game').on('click', function (event) {
@@ -396,6 +396,7 @@ webpackJsonp([0],[
 	  };
 
 	  var announceTie = function announceTie() {
+	    clearInterval(timer);
 	    tieCount++;
 	    for (var _i4 = 0; _i4 < board.length; _i4++) {
 	      $(board[_i4]).addClass('gray');
