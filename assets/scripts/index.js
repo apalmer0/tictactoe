@@ -102,9 +102,10 @@ $(document).ready(() => {
     });
   };
 
-  let endGame =  function (event) {
+  let endGame =  function () {//(event) {
     console.log('endGame');
-    event.preventDefault();
+    clearInterval(timer);
+    //event.preventDefault();
     $.ajax({
       url: myApp.baseUrl + '/games/' + myApp.game.id,
       headers: {
@@ -250,6 +251,20 @@ $(document).ready(() => {
 
   // ^^ sign out actions ^^
 
+    // takes the given board and removes all added text and classes,
+    // and hides the "restart" div
+    var resetBoard = function resetBoard() {
+      for (let i = 0; i < board.length; i++) {
+        $(board[i]).text('');
+        $(board[i]).removeClass('blue');
+        $(board[i]).removeClass('gray');
+      }
+
+      $('.restart').hide();
+    };
+
+  var timer = setInterval(reprint,1000);
+
   // vvvvvvv start multiplayer game actions vvvvvvv
   $('#start-multiplayer-game').on('click', function (event) {
     event.preventDefault();
@@ -260,6 +275,8 @@ $(document).ready(() => {
       },
       method: 'POST',
     }).done(function (data) {
+      resetBoard();
+      timer = setInterval(reprint,1000);
       $('#multiplayerGameID').text(data.game.id);
       myApp.game = data.game;
       console.log(myApp.game);
@@ -284,7 +301,9 @@ $(document).ready(() => {
       data: {},
     }).done(function (data) {
       myApp.game = data.game;
-      console.log(myApp.game);
+      console.log('just joined deathmatch '+myApp.game.id);
+      resetBoard();
+      timer = setInterval(reprint,1000);
       hideModal();
     }).fail(function (jqxhr) {
       console.error(jqxhr);
@@ -404,18 +423,6 @@ $(document).ready(() => {
     }
   };
 
-  // takes the given board and removes all added text and classes,
-  // and hides the "restart" div
-  var resetBoard = function resetBoard() {
-    for (let i = 0; i < board.length; i++) {
-      $(board[i]).text('');
-      $(board[i]).removeClass('blue');
-      $(board[i]).removeClass('gray');
-    }
-
-    $('.restart').hide();
-  };
-
   $('.restart').on('click', function (event) {
     resetBoard();
     loserGoesFirst();
@@ -441,22 +448,72 @@ $(document).ready(() => {
       },
     }).done(function (data) {
       myApp.game = data.game;
-      console.log(myApp.game);
-      console.log('yo from updateSquare!');
+      console.log(board);
+      for (let i = 0; i < board.length; i++){
+        $(board[i]).text(myApp.game.cells[i]);
+      }
+      console.log(board);
     }).fail(function (jqxhr) {
       console.error(jqxhr);
     });
   };
 
+  var newArray = [];
+  var boardArray = function boardArray() {
+    for (let i = 0; i < board.length; i++){
+      newArray[i] = $(board).text();
+    }
+    return newArray;
+  };
+
+  let updateBoardNew = function updateBoardNew() {
+    $.ajax({
+      url: myApp.baseUrl + '/games/' + myApp.game.id,
+      headers: {
+        Authorization: 'Token token=' + myApp.user.token,
+      },
+      type: 'PATCH',
+      data: {
+        game: {
+          cells: boardArray(),
+          over: false,
+        },
+      },
+    }).done(function (data) {
+      myApp.game = data.game;
+      for (let i = 0; i < board.length; i++){
+        $(board[i]).text(myApp.game.cells[i]);
+      }
+    }).fail(function (jqxhr) {
+      console.error(jqxhr);
+    });
+  };
+
+  var i = 0;
+  var reprint = function reprint(e) {
+    if (myApp.game) {
+      updateBoardNew();
+      i++;
+      console.log(i);
+      if (findAndAnnounceWinner(e)) {
+        updateProgressBars();
+        $('#xWins').text(xWinCount);
+        $('#oWins').text(oWinCount);
+        $('#ties').text(tieCount);
+        $('.restart').show();
+      }
+    }
+  };
+
   $('.square').on('click', function (e) {
     if (count % 2 === 0) {
-      if ($(this).text() !== 'O') {
+      if ($(this).text() === '') {
         $(this).text('X');
         updateSquare(e);
         count++;
       }
     } else {
-      if ($(this).text() !== 'X') {
+      if ($(this).text() === '') {
         $(this).text('O');
         updateSquare(e);
         count++;
