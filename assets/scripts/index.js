@@ -47,8 +47,6 @@ $(document).ready(() => {
   };
 
   var hidePageElements = function hidePageElements() {
-    $('.deathmatch-started').hide();
-    $('.yo-wait').hide();
     $('.restart').hide();
     $('.message').hide();
     $('.message-signout').hide();
@@ -57,6 +55,8 @@ $(document).ready(() => {
     $('.password').hide();
     $('.wrong-password').hide();
     $('.message-account-exists').hide();
+    $('.deathmatch-started').hide();
+    $('.yo-wait').hide();
   };
 
   var hideModal = function hideModal() {
