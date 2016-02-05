@@ -17,6 +17,10 @@ $(document).ready(() => {
   // initial page setup
 
   var count = 0;
+  var marker = 'X';
+  var players = 1;
+  var playerO;
+  var playerX;
   var xWinCount = $('#xWins').val() || 0;
   var oWinCount = $('#oWins').val() || 0;
   var tieCount = $('#ties').val() || 0;
@@ -51,6 +55,8 @@ $(document).ready(() => {
     $('.password').hide();
     $('.wrong-password').hide();
     $('.message-account-exists').hide();
+    $('.deathmatch-started').hide();
+    $('.yo-wait').hide();
   };
 
   var hideModal = function hideModal() {
@@ -71,6 +77,7 @@ $(document).ready(() => {
   // make sure the appropriate page elements are displayed
   // whether or not you're logged in
   hidePageElements();
+
   if (!myApp.user) {
     toggleLoggedOut();
   } else {
@@ -82,6 +89,23 @@ $(document).ready(() => {
   $('.modal-button').on('click', function () {
     $('.navbar-collapse').removeClass('in');
   });
+
+  $('.donezo-button').on('click', function () {
+    $('.marker-type').text(marker);
+    displayMessage('.deathmatch-started');
+  });
+
+  var piecesPlayed = function piecesPlayed() {
+    count = 0;
+    for (let i = 0; i < board.length; i++) {
+      if ($(board[i]).text() !== '') {
+        count++;
+      }
+    }
+
+    return count;
+  };
+
 
   let createGame =  function (event) {
     event.preventDefault();
@@ -102,9 +126,10 @@ $(document).ready(() => {
     });
   };
 
-  let endGame =  function (event) {
+  let endGame =  function () {//(event) {
     console.log('endGame');
-    event.preventDefault();
+    clearInterval(timer);
+    //event.preventDefault();
     $.ajax({
       url: myApp.baseUrl + '/games/' + myApp.game.id,
       headers: {
@@ -187,7 +212,18 @@ $(document).ready(() => {
       data: {},
     }).done(function (data) {
       for (let i = 0; i < data.games.length; i++) {
-        $('.all-games').append('<tr><td>' + data.games[i].id + '</td><td>' + data.games[i].player_o + '</td><td>' + data.games[i].cells + '<td><button data-dismiss="modal" id=' + data.games[i].id + '>View</button></td></tr>');
+        if (data.games[i].player_o) {
+          playerO = data.games[i].player_o.email;
+        } else {
+          playerO = 'n/a';
+        }
+        if (data.games[i].player_x) {
+          playerX = data.games[i].player_x.email;
+        } else {
+          playerX = 'n/a';
+        }
+
+        $('.all-games').append('<tr><td>' + data.games[i].id + '</td><td>' + playerX + '</td><td>' + playerO + '</td><td>' + data.games[i].cells + '<td><button data-dismiss="modal" id=' + data.games[i].id + '>View</button></td></tr>');
       }
     }).fail(function (jqxhr) {
       console.error(jqxhr);
@@ -250,6 +286,20 @@ $(document).ready(() => {
 
   // ^^ sign out actions ^^
 
+    // takes the given board and removes all added text and classes,
+    // and hides the "restart" div
+    var resetBoard = function resetBoard() {
+      for (let i = 0; i < board.length; i++) {
+        $(board[i]).text('');
+        $(board[i]).removeClass('blue');
+        $(board[i]).removeClass('gray');
+      }
+
+      $('.restart').hide();
+    };
+
+  var timer = setInterval(reprint,1000);
+
   // vvvvvvv start multiplayer game actions vvvvvvv
   $('#start-multiplayer-game').on('click', function (event) {
     event.preventDefault();
@@ -260,6 +310,9 @@ $(document).ready(() => {
       },
       method: 'POST',
     }).done(function (data) {
+      resetBoard();
+      timer = setInterval(reprint,1000);
+      players = 2;
       $('#multiplayerGameID').text(data.game.id);
       myApp.game = data.game;
       console.log(myApp.game);
@@ -284,8 +337,14 @@ $(document).ready(() => {
       data: {},
     }).done(function (data) {
       myApp.game = data.game;
-      console.log(myApp.game);
+      console.log('just joined deathmatch '+myApp.game.id);
+      marker = 'O';
+      players = 2;
+      resetBoard();
+      timer = setInterval(reprint,1000);
       hideModal();
+      $('.marker-type').text(marker);
+      displayMessage('.deathmatch-started');
     }).fail(function (jqxhr) {
       console.error(jqxhr);
       console.log('you fucked up');
@@ -329,7 +388,7 @@ $(document).ready(() => {
     return true;
   };
 
-  var updateBoard = function updateBoard() {
+  var loadOldBoard = function loadOldBoard() {
     for (let i = 0; i < board.length; i++) {
       $(board[i]).text(archivedBoard[i]);
     }
@@ -385,7 +444,7 @@ $(document).ready(() => {
         archivedBoard[i] = data.game.cells[i];
       }
 
-      updateBoard();
+      loadOldBoard();
       findAndAnnounceWinner(event);
       $('.restart').show();
     }).fail(function (jqxhr) {
@@ -404,24 +463,16 @@ $(document).ready(() => {
     }
   };
 
-  // takes the given board and removes all added text and classes,
-  // and hides the "restart" div
-  var resetBoard = function resetBoard() {
-    for (let i = 0; i < board.length; i++) {
-      $(board[i]).text('');
-      $(board[i]).removeClass('blue');
-      $(board[i]).removeClass('gray');
-    }
-
-    $('.restart').hide();
-  };
-
+  // allows a click on the blank restart div to reset the board, change
+  // players, and start a new game
   $('.restart').on('click', function (event) {
     resetBoard();
     loserGoesFirst();
     createGame(event);
   });
 
+  // sends the updated square back to the server via the api, then updates
+  // the game board with a copy of the updated data
   let updateSquare = function updateSquare(e) {
     e.preventDefault();
     $.ajax({
@@ -441,25 +492,90 @@ $(document).ready(() => {
       },
     }).done(function (data) {
       myApp.game = data.game;
-      console.log(myApp.game);
-      console.log('yo from updateSquare!');
+      for (let i = 0; i < board.length; i++){
+        $(board[i]).text(myApp.game.cells[i]);
+      }
     }).fail(function (jqxhr) {
       console.error(jqxhr);
     });
   };
 
-  $('.square').on('click', function (e) {
-    if (count % 2 === 0) {
-      if ($(this).text() !== 'O') {
-        $(this).text('X');
-        updateSquare(e);
-        count++;
+
+  var newArray = [];
+  var currentBoardState = function currentBoardState() {
+    for (let i = 0; i < board.length; i++){
+      newArray[i] = $(board[i]).text();
+    }
+    return newArray;
+  };
+
+  let updateCurrentBoard = function updateCurrentBoard() {
+    $.ajax({
+      url: myApp.baseUrl + '/games/' + myApp.game.id,
+      headers: {
+        Authorization: 'Token token=' + myApp.user.token,
+      },
+      type: 'PATCH',
+      data: {
+        game: {
+          cells: currentBoardState(),
+          over: false,
+        },
+      },
+    }).done(function (data) {
+      myApp.game = data.game;
+      for (let i = 0; i < board.length; i++){
+        $(board[i]).text(myApp.game.cells[i]);
       }
-    } else {
-      if ($(this).text() !== 'X') {
-        $(this).text('O');
-        updateSquare(e);
-        count++;
+    }).fail(function (jqxhr) {
+      console.error(jqxhr);
+    });
+  };
+
+  var i = 0;
+  var reprint = function reprint(e) {
+    if (myApp.game) {
+      updateCurrentBoard();
+      i++;
+      console.log(i);
+      if (findAndAnnounceWinner(e)) {
+        updateProgressBars();
+        $('#xWins').text(xWinCount);
+        $('#oWins').text(oWinCount);
+        $('#ties').text(tieCount);
+        $('.restart').show();
+      }
+    }
+  };
+
+  $('.square').on('click', function (e) {
+    if (players === 1) {
+      if (count % 2 === 0) {
+        if ($(this).text() === '') {
+          $(this).text('X');
+          updateSquare(e);
+          count++;
+        }
+      } else {
+        if ($(this).text() === '') {
+          $(this).text('O');
+          updateSquare(e);
+          count++;
+        }
+      }
+    } else if (players === 2) {
+      if (marker === 'X' && piecesPlayed() % 2 === 0) {
+        if ($(this).text() === '') {
+          $(this).text(marker);
+          updateSquare(e);
+        }
+      } else if (marker === 'O' && piecesPlayed() % 2 === 1){
+        if ($(this).text() === '') {
+          $(this).text(marker);
+          updateSquare(e);
+        }
+      } else {
+        displayMessage('.yo-wait');
       }
     }
 
