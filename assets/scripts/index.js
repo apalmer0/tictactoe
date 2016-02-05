@@ -17,6 +17,8 @@ $(document).ready(() => {
   // initial page setup
 
   var count = 0;
+  var marker = 'X';
+  var players = 1;
   var xWinCount = $('#xWins').val() || 0;
   var oWinCount = $('#oWins').val() || 0;
   var tieCount = $('#ties').val() || 0;
@@ -51,6 +53,8 @@ $(document).ready(() => {
     $('.password').hide();
     $('.wrong-password').hide();
     $('.message-account-exists').hide();
+    $('.deathmatch-started').hide();
+    $('.yo-wait').hide();
   };
 
   var hideModal = function hideModal() {
@@ -71,6 +75,7 @@ $(document).ready(() => {
   // make sure the appropriate page elements are displayed
   // whether or not you're logged in
   hidePageElements();
+
   if (!myApp.user) {
     toggleLoggedOut();
   } else {
@@ -82,6 +87,23 @@ $(document).ready(() => {
   $('.modal-button').on('click', function () {
     $('.navbar-collapse').removeClass('in');
   });
+
+  $('.donezo-button').on('click', function () {
+    $('.marker-type').text(marker);
+    displayMessage('.deathmatch-started');
+  });
+
+  var piecesPlayed = function piecesPlayed() {
+    count = 0;
+    for (let i = 0; i < board.length; i++) {
+      if ($(board[i]).text() !== '') {
+        count++;
+      }
+    }
+
+    return count;
+  };
+
 
   let createGame =  function (event) {
     event.preventDefault();
@@ -277,6 +299,7 @@ $(document).ready(() => {
     }).done(function (data) {
       resetBoard();
       timer = setInterval(reprint,1000);
+      players = 2;
       $('#multiplayerGameID').text(data.game.id);
       myApp.game = data.game;
       console.log(myApp.game);
@@ -302,9 +325,13 @@ $(document).ready(() => {
     }).done(function (data) {
       myApp.game = data.game;
       console.log('just joined deathmatch '+myApp.game.id);
+      marker = 'O';
+      players = 2;
       resetBoard();
       timer = setInterval(reprint,1000);
       hideModal();
+      $('.marker-type').text(marker);
+      displayMessage('.deathmatch-started');
     }).fail(function (jqxhr) {
       console.error(jqxhr);
       console.log('you fucked up');
@@ -448,11 +475,9 @@ $(document).ready(() => {
       },
     }).done(function (data) {
       myApp.game = data.game;
-      console.log(board);
       for (let i = 0; i < board.length; i++){
         $(board[i]).text(myApp.game.cells[i]);
       }
-      console.log(board);
     }).fail(function (jqxhr) {
       console.error(jqxhr);
     });
@@ -506,17 +531,33 @@ $(document).ready(() => {
   };
 
   $('.square').on('click', function (e) {
-    if (count % 2 === 0) {
-      if ($(this).text() === '') {
-        $(this).text('X');
-        updateSquare(e);
-        count++;
+    if (players === 1) {
+      if (count % 2 === 0) {
+        if ($(this).text() === '') {
+          $(this).text('X');
+          updateSquare(e);
+          count++;
+        }
+      } else {
+        if ($(this).text() === '') {
+          $(this).text('O');
+          updateSquare(e);
+          count++;
+        }
       }
-    } else {
-      if ($(this).text() === '') {
-        $(this).text('O');
-        updateSquare(e);
-        count++;
+    } else if (players === 2) {
+      if (marker === 'X' && piecesPlayed() % 2 === 0) {
+        if ($(this).text() === '') {
+          $(this).text(marker);
+          updateSquare(e);
+        }
+      } else if (marker === 'O' && piecesPlayed() % 2 === 1){
+        if ($(this).text() === '') {
+          $(this).text(marker);
+          updateSquare(e);
+        }
+      } else {
+        displayMessage('.yo-wait');
       }
     }
 

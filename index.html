@@ -85,6 +85,12 @@
       <div class="alert alert-warning alert-dismissible message-account-exists" role="alert">
         <strong>Hey!</strong> You've already got an account. Try signing in.
       </div>
+      <div class="alert alert-danger alert-dismissible deathmatch-started" role="alert">
+        <strong>Deathmatch started!</strong> Good luck! You're playing as <span class='marker-type'><span>
+      </div>
+      <div class="alert alert-danger alert-dismissible yo-wait" role="alert">
+        <strong>Yo!</strong> Wait your turn.
+      </div>
       <!-- pop-up messages -->
 
       <div class="login">
@@ -130,6 +136,8 @@
           </tr>
         </table>
         <!-- score board -->
+        <div class='move-tracker'>0</div>
+        <button class='upcount'>more</button>
       </div>
 
       <!-- vvvv Sign up Modal vvvv -->
@@ -300,7 +308,7 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default modal-button" data-dismiss="modal">Donezo</button>
+              <button type="button" class="btn btn-default modal-button donezo-button" data-dismiss="modal">Donezo</button>
             </div>
           </div>
         </div>
