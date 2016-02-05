@@ -19,6 +19,8 @@ $(document).ready(() => {
   var count = 0;
   var marker = 'X';
   var players = 1;
+  var playerO;
+  var playerX;
   var xWinCount = $('#xWins').val() || 0;
   var oWinCount = $('#oWins').val() || 0;
   var tieCount = $('#ties').val() || 0;
@@ -210,7 +212,18 @@ $(document).ready(() => {
       data: {},
     }).done(function (data) {
       for (let i = 0; i < data.games.length; i++) {
-        $('.all-games').append('<tr><td>' + data.games[i].id + '</td><td>' + data.games[i].player_o + '</td><td>' + data.games[i].cells + '<td><button data-dismiss="modal" id=' + data.games[i].id + '>View</button></td></tr>');
+        if (data.games[i].player_o) {
+          playerO = data.games[i].player_o.email;
+        } else {
+          playerO = 'n/a';
+        }
+        if (data.games[i].player_x) {
+          playerX = data.games[i].player_x.email;
+        } else {
+          playerX = 'n/a';
+        }
+
+        $('.all-games').append('<tr><td>' + data.games[i].id + '</td><td>' + playerX + '</td><td>' + playerO + '</td><td>' + data.games[i].cells + '<td><button data-dismiss="modal" id=' + data.games[i].id + '>View</button></td></tr>');
       }
     }).fail(function (jqxhr) {
       console.error(jqxhr);
@@ -375,7 +388,7 @@ $(document).ready(() => {
     return true;
   };
 
-  var updateBoard = function updateBoard() {
+  var loadOldBoard = function loadOldBoard() {
     for (let i = 0; i < board.length; i++) {
       $(board[i]).text(archivedBoard[i]);
     }
@@ -431,7 +444,7 @@ $(document).ready(() => {
         archivedBoard[i] = data.game.cells[i];
       }
 
-      updateBoard();
+      loadOldBoard();
       findAndAnnounceWinner(event);
       $('.restart').show();
     }).fail(function (jqxhr) {
@@ -450,12 +463,16 @@ $(document).ready(() => {
     }
   };
 
+  // allows a click on the blank restart div to reset the board, change
+  // players, and start a new game
   $('.restart').on('click', function (event) {
     resetBoard();
     loserGoesFirst();
     createGame(event);
   });
 
+  // sends the updated square back to the server via the api, then updates
+  // the game board with a copy of the updated data
   let updateSquare = function updateSquare(e) {
     e.preventDefault();
     $.ajax({
@@ -483,15 +500,16 @@ $(document).ready(() => {
     });
   };
 
+
   var newArray = [];
-  var boardArray = function boardArray() {
+  var currentBoardState = function currentBoardState() {
     for (let i = 0; i < board.length; i++){
-      newArray[i] = $(board).text();
+      newArray[i] = $(board[i]).text();
     }
     return newArray;
   };
 
-  let updateBoardNew = function updateBoardNew() {
+  let updateCurrentBoard = function updateCurrentBoard() {
     $.ajax({
       url: myApp.baseUrl + '/games/' + myApp.game.id,
       headers: {
@@ -500,7 +518,7 @@ $(document).ready(() => {
       type: 'PATCH',
       data: {
         game: {
-          cells: boardArray(),
+          cells: currentBoardState(),
           over: false,
         },
       },
@@ -517,7 +535,7 @@ $(document).ready(() => {
   var i = 0;
   var reprint = function reprint(e) {
     if (myApp.game) {
-      updateBoardNew();
+      updateCurrentBoard();
       i++;
       console.log(i);
       if (findAndAnnounceWinner(e)) {
