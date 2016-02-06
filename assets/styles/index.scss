@@ -9,6 +9,7 @@ $black: #000;
 $blue: #0198e1;
 $gray: #282828;
 $red: #f00;
+$image-width: 100%;
 
 html,
 body {
@@ -20,7 +21,7 @@ body {
   width: 100%;
 }
 
-.message,
+.welcome,
 .winner-message,
 .tie-message,
 .message-signout,
@@ -36,7 +37,7 @@ body {
 .game {
   height: 100%;
   margin: 0 auto;
-  margin-top: 20px;
+  margin-top: 90px;
   width: 100%;
 }
 
@@ -58,15 +59,46 @@ table {
   overflow-y: auto;
 }
 
+.glyphicon {
+  font-size: 400%;
+}
 
 .login {
   background-color: $blue;
   height: 1000px;
+  margin-top: 50px;
   width: 100%;
 }
 
 .section1 {
+  background-color: $gray;
+  padding: 20px;
+}
+
+.welcome-banner {
   background-color: $white;
+  color: $gray;
+  height: 5%;
+  padding-bottom: 3%;
+  padding-top: 2%;
+  position: absolute;
+  width: 100%;
+}
+
+.column-content {
+  font-family: sans-serif;
+  padding: 20px;
+}
+
+.section2 {
+  color: $gray;
+  margin-top: -20%;
+}
+
+img {
+  height: $image-width * .67;
+  opacity: .3;
+  width: $image-width;
 }
 
 .wrong-password {
@@ -97,6 +129,10 @@ table {
   table {
     width: 70%;
   }
+
+  .overlay {
+    top: -70px;
+  }
 }
 
 // this will be applied for browsers bigger than 564px wide
@@ -113,6 +149,12 @@ table {
   }
 }
 
+// this will be applied for browsers bigger than 564px wide
+@media (min-width: 990px) {
+  .well {
+    height: 340px;
+  }
+}
 
 .restart {
   cursor: pointer;

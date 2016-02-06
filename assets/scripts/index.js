@@ -48,7 +48,7 @@ $(document).ready(() => {
 
   var hidePageElements = function hidePageElements() {
     $('.restart').hide();
-    $('.message').hide();
+    $('.welcome').hide();
     $('.message-signout').hide();
     $('.winner-message').hide();
     $('.tie-message').hide();
@@ -150,22 +150,39 @@ $(document).ready(() => {
     });
   };
 
+
   // vv signup actions vv
-  $('.sign-up').on('submit', function (e) {
-    e.preventDefault();
-    var formData = new FormData(e.target);
+  $('.sign-up').on('submit', function (event) {
+    event.preventDefault();
+    var formData = new FormData(event.target);
+    console.log('starting signup');
     $.ajax({
       url: myApp.baseUrl + '/sign-up',
       method: 'POST',
       contentType: false,
       processData: false,
       data: formData,
-    }).done(function (data) {
-      myApp.user = data.user;
-      toggleLoggedIn();
-      hideModal();
-      createGame(e);
-      displayMessage('.message');
+    }).done(function () {
+      console.log('signup success');
+      console.log('starting signin');
+      $.ajax({
+        url: myApp.baseUrl + '/sign-in',
+        method: 'POST',
+        contentType: false,
+        processData: false,
+        data: formData,
+      }).done(function (data) {
+        console.log('signin success');
+        myApp.user = data.user;
+        console.log(data.user.token);
+        toggleLoggedIn();
+        hideModal();
+        createGame(event);
+        displayMessage('.welcome');
+      }).fail(function (jqxhr) {
+        $('.wrong-password').show();
+        console.error(jqxhr);
+      });
     }).fail(function (jqxhr) {
       console.error(jqxhr);
       hideModal();
@@ -176,6 +193,8 @@ $(document).ready(() => {
   // ^^ signup actions ^^
 
   // vv signin actions vv
+
+
   $('.sign-in').on('submit', function (e) {
     e.preventDefault();
     var formData = new FormData(e.target);
@@ -187,11 +206,11 @@ $(document).ready(() => {
       data: formData,
     }).done(function (data) {
       myApp.user = data.user;
-      console.log(data);
+      console.log(data.user.token);
       toggleLoggedIn();
       hideModal();
       createGame(e);
-      displayMessage('.message');
+      displayMessage('.welcome');
     }).fail(function (jqxhr) {
       $('.wrong-password').show();
       console.error(jqxhr);
