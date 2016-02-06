@@ -7,7 +7,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
-      <nav class="navbar navbar-default">
+      <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
           <!-- Brand and toggle get grouped for better mobile display -->
           <div class="navbar-header">
@@ -67,7 +67,7 @@
       <!-- end navbar -->
 
       <!-- pop-up messages -->
-      <div class="alert alert-success alert-dismissible message" role="alert">
+      <div class="alert alert-success alert-dismissible welcome" role="alert">
         <strong>Welcome!</strong> You've been logged in. Prepare to tic tac toe your freaking face off.
       </div>
       <div class="alert alert-info alert-dismissible password" role="alert">
@@ -95,6 +95,48 @@
 
       <div class="login">
         <div class="section1">
+          <div class="welcome-banner">
+            Welcome to Tic Tac Toe. Here's a picture of something that's not tic-tac-toe and is in no way related to this game.
+          </div>
+          <img src="assets/images/pic1.jpg">
+        </div>
+        <div class='container'>
+          <div class="section2">
+            <div class='row'>
+              <div class='col-md-4'>
+                <div class="well">
+                  <div class="glyphicon glyphicon-user" aria-hidden="true"></div>
+                  <div>Create an account</div>
+                  <p class="column-content">Most places let you just play tic-tac-toe whenever you want. Here,
+                    you get to sign up for an account before you play. Because who wants to play a mindless
+                    game without having a record of all their games? Not you, that's for sure.
+                  </p>
+                  <strong>Sign up today.</strong>
+                </div>
+              </div>
+              <div class='col-md-4'>
+                <div class="well">
+                  <div class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></div>
+                  <div>Compete against friends</div>
+                  <p class="column-content">Sick of playing tic-tac-toe by yourself? Well, you're probably the only person
+                    in the world who plays tic-tac-toe by himself, so you probably don't have any friends to play with anyway.
+                    But if you did, you could play this awesome game with them.
+                  </p>
+                  <strong>Sign up today.</strong>
+                </div>
+              </div>
+              <div class='col-md-4'>
+                <div class="well">
+                  <div class="glyphicon glyphicon-tree-conifer" aria-hidden="true"></div>
+                  <div>Look at this tree</div>
+                  <p class="column-content">You might think it's just a tree, and you'd be right. But what kind of tree is it?
+                    Well, it's a conifer. That's basically all you need to know about that.
+                  </p>
+                  <strong>Sign up today.</strong>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -139,7 +181,7 @@
       </div>
 
       <!-- vvvv Sign up Modal vvvv -->
-      <div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <!-- <div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <form class="sign-up">
@@ -167,6 +209,27 @@
               </div>
             </div>
           </form>
+        </div>
+      </div> -->
+      <div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h2 class="modal-title" id="myModalLabel">Sign up</h2>
+            </div>
+            <div class="modal-body">
+              <form class="sign-up">
+                <input name="credentials[email]" type="text" value="an@example.email">
+                <input name="credentials[password]" type="password" value="an example password">
+                <button type="submit">Submit</button>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              <button type="submit" name="submit" class="btn btn-primary modal-button" id="saveButton">Sign up</button>
+            </div>
+          </div>
         </div>
       </div>
       <!-- ^^^^ Sign up Modal ^^^^ -->
