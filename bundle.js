@@ -89,6 +89,7 @@ webpackJsonp([0],[
 	  };
 
 	  var hideModal = function hideModal() {
+	    console.log('hide modal');
 	    $('.modal').hide();
 	    $('.modal').removeClass('in');
 	    $('.modal').attr('style', 'display: none;');
@@ -404,7 +405,6 @@ webpackJsonp([0],[
 	      $('.game-number').text(myApp.game.id);
 	      displayMessage('.deathmatch-started');
 	      $('#start-multiplayer-game').hide();
-	      $('#join-game').hide();
 	      $('#end-multiplayer-game').show();
 	    }).fail(function (jqxhr) {
 	      console.error(jqxhr);
