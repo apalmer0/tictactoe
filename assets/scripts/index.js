@@ -57,8 +57,9 @@ $(document).ready(() => {
     $('.message-account-exists').hide();
     $('.deathmatch-started').hide();
     $('.yo-wait').hide();
-    $('.game-over').hide();
+    $('.player-quit').hide();
     $('#end-multiplayer-game').hide();
+    $('.opp-quit').hide();
   };
 
 
@@ -103,7 +104,7 @@ $(document).ready(() => {
     $('.restart').show();
     $('#start-multiplayer-game').show();
     $('#end-multiplayer-game').hide();
-    displayMessage('.game-over');
+    displayMessage('.player-quit');
   });
 
   var piecesPlayed = function piecesPlayed() {
@@ -137,11 +138,9 @@ $(document).ready(() => {
     });
   };
 
-  let endGame =  function () {//(event) {
-    console.log('endGame');
-    clearInterval(timer);
-    players = 1;
-    //event.preventDefault();
+  let endGame =  function () {
+    console.log('ending game id: '+myApp.game.id);
+    console.log('game '+myApp.game.id+' is over - true or false? '+myApp.game.over);
     $.ajax({
       url: myApp.baseUrl + '/games/' + myApp.game.id,
       headers: {
@@ -150,13 +149,17 @@ $(document).ready(() => {
       type: 'PATCH',
       data: {
         game: {
-          over: true,
+          over: 'true',
         },
       },
     }).done(function (data) {
+      myApp.game = data.game;
       console.log(data);
+      console.log('game is over - true or false? '+myApp.game.over);
+      console.log('game ended');
+      clearInterval(timer);
+      players = 1;
 
-      //myApp.game = data.game;
     }).fail(function (jqxhr) {
       console.error(jqxhr);
     });
@@ -207,9 +210,9 @@ $(document).ready(() => {
   // vv signin actions vv
 
 
-  $('.sign-in').on('submit', function (e) {
-    e.preventDefault();
-    var formData = new FormData(e.target);
+  $('.sign-in').on('submit', function (event) {
+    event.preventDefault();
+    var formData = new FormData(event.target);
     $.ajax({
       url: myApp.baseUrl + '/sign-in',
       method: 'POST',
@@ -221,7 +224,7 @@ $(document).ready(() => {
       console.log(data.user.token);
       toggleLoggedIn();
       hideModal();
-      createGame(e);
+      createGame(event);
       displayMessage('.welcome');
     }).fail(function (jqxhr) {
       $('.wrong-password').show();
@@ -516,6 +519,7 @@ $(document).ready(() => {
   // the game board with a copy of the updated data
   let updateSquare = function updateSquare(e) {
     e.preventDefault();
+    console.log('myApp cells before patch'+myApp.game.cells);
     $.ajax({
       url: myApp.baseUrl + '/games/' + myApp.game.id,
       headers: {
@@ -528,46 +532,34 @@ $(document).ready(() => {
             index: event.target.id,
             value: $(event.target).text(),
           },
-          over: false,
+          over: myApp.game.over,
         },
       },
     }).done(function (data) {
       myApp.game = data.game;
-      for (let i = 0; i < board.length; i++){
-        $(board[i]).text(myApp.game.cells[i]);
-      }
+      console.log(myApp.game.id);
+      console.log('myApp cells after patch'+myApp.game.cells);
+      getUpdatedBoard();
     }).fail(function (jqxhr) {
       console.error(jqxhr);
     });
   };
 
-
-  var newArray = [];
-  var currentBoardState = function currentBoardState() {
-    for (let i = 0; i < board.length; i++){
-      newArray[i] = $(board[i]).text();
-    }
-    return newArray;
-  };
-
-  let updateCurrentBoard = function updateCurrentBoard() {
+  var getUpdatedBoard = function getUpdatedBoard() {
     $.ajax({
       url: myApp.baseUrl + '/games/' + myApp.game.id,
       headers: {
         Authorization: 'Token token=' + myApp.user.token,
       },
-      type: 'PATCH',
-      data: {
-        game: {
-          cells: currentBoardState(),
-          over: false,
-        },
-      },
+      type: 'GET',
+      data: {},
     }).done(function (data) {
+      console.log(data);
       myApp.game = data.game;
       for (let i = 0; i < board.length; i++){
         $(board[i]).text(myApp.game.cells[i]);
       }
+      console.log('board updated FROM server');
     }).fail(function (jqxhr) {
       console.error(jqxhr);
     });
@@ -575,10 +567,12 @@ $(document).ready(() => {
 
   var i = 0;
   var reprint = function reprint(e) {
-    if (myApp.game) {
-      updateCurrentBoard();
+    if (!myApp.game.over) {
+      console.log('start reprint');
+      getUpdatedBoard();
       i++;
       console.log(i);
+      console.log('game '+myApp.game.id+' is over - true or false? '+myApp.game.over);
       if (findAndAnnounceWinner(e)) {
         updateProgressBars();
         $('#xWins').text(xWinCount);
@@ -586,6 +580,12 @@ $(document).ready(() => {
         $('#ties').text(tieCount);
         $('.restart').show();
       }
+    } else {
+      displayMessage('.opp-quit');
+      $('#end-multiplayer-game').hide();
+      $('#start-multiplayer-game').show();
+      $('.restart').show();
+      endGame(e);
     }
   };
 
@@ -617,6 +617,7 @@ $(document).ready(() => {
         }
       } else {
         displayMessage('.yo-wait');
+        console.log('over? '+myApp.game.over);
       }
     }
 
