@@ -64,6 +64,7 @@ $(document).ready(() => {
 
 
   var hideModal = function hideModal() {
+    console.log('hide modal');
     $('.modal').hide();
     $('.modal').removeClass('in');
     $('.modal').attr('style','display: none;');
@@ -383,7 +384,6 @@ $(document).ready(() => {
       $('.game-number').text(myApp.game.id);
       displayMessage('.deathmatch-started');
       $('#start-multiplayer-game').hide();
-      $('#join-game').hide();
       $('#end-multiplayer-game').show();
     }).fail(function (jqxhr) {
       console.error(jqxhr);
