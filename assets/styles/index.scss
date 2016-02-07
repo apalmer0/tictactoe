@@ -29,7 +29,8 @@ body {
 .message-account-exists,
 .deathmatch-started,
 .yo-wait,
-.game-over {
+.player-quit,
+.opp-quit {
   font-family: sans-serif;
   position: fixed;
   width: 100%;
