@@ -7,7 +7,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
-      <nav class="navbar navbar-default navbar-fixed-top">
+      <nav class="navbar navbar-inverse navbar-default navbar-fixed-top">
         <div class="container-fluid">
           <!-- Brand and toggle get grouped for better mobile display -->
           <div class="navbar-header">
@@ -32,7 +32,12 @@
                 </button>
               </li>
               <li>
-                <button type="button" class="btn btn-danger logged-in modal-button" data-toggle="modal" data-target="#joinGameModal">
+                <button type="button" class="btn btn-warning modal-button" id='end-multiplayer-game'>
+                  End deathmatch
+                </button>
+              </li>
+              <li>
+                <button type="button" class="btn btn-danger modal-button logged-in" id='join-multiplayer-game' data-toggle="modal" data-target="#joinGameModal">
                   Join deathmatch!
                 </button>
               </li>
@@ -40,7 +45,6 @@
                 <button type="button" class="btn btn-success logged-in modal-button" data-toggle="modal" data-target="#allGamesModal" id="get-games">
                   Get games
                 </button>
-
               </li>
               <li>
                 <button type="button" class="btn btn-primary logged-in modal-button" data-toggle="modal" data-target="#changePasswordModal">
@@ -86,10 +90,13 @@
         <strong>Hey!</strong> You've already got an account. Try signing in.
       </div>
       <div class="alert alert-danger alert-dismissible deathmatch-started" role="alert">
-        <strong>Deathmatch started!</strong> Good luck! You're playing as <span class='marker-type'><span>
+        <strong>Deathmatch <span class="game-number"></span> started!</strong> Good luck! You're playing as <span class='marker-type'><span>
       </div>
       <div class="alert alert-danger alert-dismissible yo-wait" role="alert">
         <strong>Yo!</strong> Wait your turn.
+      </div>
+      <div class="alert alert-info alert-dismissible game-over" role="alert">
+        <strong>Deathmatch ended.</strong> Sissy. Click to play by yourself. Have fun.
       </div>
       <!-- pop-up messages -->
 
@@ -130,7 +137,7 @@
                   <div class="glyphicon glyphicon-tree-conifer" aria-hidden="true"></div>
                   <div>Look at this tree</div>
                   <p class="column-content">You might think it's just a tree, and you'd be right. But what kind of tree is it?
-                    Well, it's a conifer. That's basically all you need to know about that.
+                    Well, it's a conifer. That's pretty much all you need to know about that. Actually yeah, there is literally nothing else to say about this tree.
                   </p>
                   <strong>Sign up today.</strong>
                 </div>

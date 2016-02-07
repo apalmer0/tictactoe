@@ -28,7 +28,8 @@ body {
 .password,
 .message-account-exists,
 .deathmatch-started,
-.yo-wait {
+.yo-wait,
+.game-over {
   font-family: sans-serif;
   position: fixed;
   width: 100%;
@@ -79,6 +80,7 @@ table {
   background-color: $white;
   color: $gray;
   height: 5%;
+  left: 0;
   padding-bottom: 3%;
   padding-top: 2%;
   position: absolute;
