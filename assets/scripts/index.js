@@ -57,7 +57,10 @@ $(document).ready(() => {
     $('.message-account-exists').hide();
     $('.deathmatch-started').hide();
     $('.yo-wait').hide();
+    $('.game-over').hide();
+    $('#end-multiplayer-game').hide();
   };
+
 
   var hideModal = function hideModal() {
     $('.modal').hide();
@@ -95,6 +98,14 @@ $(document).ready(() => {
     displayMessage('.deathmatch-started');
   });
 
+  $('#end-multiplayer-game').on('click', function () {
+    endGame();
+    $('.restart').show();
+    $('#start-multiplayer-game').show();
+    $('#end-multiplayer-game').hide();
+    displayMessage('.game-over');
+  });
+
   var piecesPlayed = function piecesPlayed() {
     count = 0;
     for (let i = 0; i < board.length; i++) {
@@ -129,6 +140,7 @@ $(document).ready(() => {
   let endGame =  function () {//(event) {
     console.log('endGame');
     clearInterval(timer);
+    players = 1;
     //event.preventDefault();
     $.ajax({
       url: myApp.baseUrl + '/games/' + myApp.game.id,
@@ -329,11 +341,14 @@ $(document).ready(() => {
       },
       method: 'POST',
     }).done(function (data) {
+      myApp.game = data.game;
       resetBoard();
       timer = setInterval(reprint,1000);
       players = 2;
       $('#multiplayerGameID').text(data.game.id);
-      myApp.game = data.game;
+      $('.game-number').text(myApp.game.id);
+      $('#start-multiplayer-game').hide();
+      $('#end-multiplayer-game').show();
       console.log(myApp.game);
     }).fail(function (jqxhr) {
       console.error(jqxhr);
@@ -356,14 +371,17 @@ $(document).ready(() => {
       data: {},
     }).done(function (data) {
       myApp.game = data.game;
-      console.log('just joined deathmatch '+myApp.game.id);
       marker = 'O';
       players = 2;
       resetBoard();
       timer = setInterval(reprint,1000);
       hideModal();
       $('.marker-type').text(marker);
+      $('.game-number').text(myApp.game.id);
       displayMessage('.deathmatch-started');
+      $('#start-multiplayer-game').hide();
+      $('#join-game').hide();
+      $('#end-multiplayer-game').show();
     }).fail(function (jqxhr) {
       console.error(jqxhr);
       console.log('you fucked up');
@@ -394,6 +412,9 @@ $(document).ready(() => {
     for (let i = 0; i < board.length; i++) {
       $(board[i]).addClass('gray');
     }
+    $('#end-multiplayer-game').hide();
+    $('#start-multiplayer-game').show();
+    players = 1;
 
     displayMessage('.tie-message');
   };
