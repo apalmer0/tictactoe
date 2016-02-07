@@ -58,6 +58,8 @@ webpackJsonp([0],[
 	  var board = $('.board').children();
 	  var archivedBoard = [];
 	  var winningCombos = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
+	  var timerSeconds = 0;
+
 	  var toggleLoggedIn = function toggleLoggedIn() {
 	    $('.login').hide();
 	    $('.game').show();
@@ -89,12 +91,13 @@ webpackJsonp([0],[
 	  };
 
 	  var hideModal = function hideModal() {
-	    console.log('hide modal');
 	    $('.modal').hide();
 	    $('.modal').removeClass('in');
 	    $('.modal').attr('style', 'display: none;');
 	    $('.modal-backdrop').hide();
 	  };
+
+	  var timer = setInterval(reprint, 500);
 
 	  var displayMessage = function displayMessage(type) {
 	    $(function () {
@@ -104,10 +107,11 @@ webpackJsonp([0],[
 	    });
 	  };
 
-	  // make sure the appropriate page elements are displayed
-	  // whether or not you're logged in
+	  // hides all page elements that need to appear at specific points.
 	  hidePageElements();
 
+	  // make sure the appropriate page elements are displayed
+	  // based on whether or not you're logged in
 	  if (!myApp.user) {
 	    toggleLoggedOut();
 	  } else {
@@ -124,25 +128,6 @@ webpackJsonp([0],[
 	    $('.marker-type').text(marker);
 	    displayMessage('.deathmatch-started');
 	  });
-
-	  $('#end-multiplayer-game').on('click', function () {
-	    endGame();
-	    $('.restart').show();
-	    $('#start-multiplayer-game').show();
-	    $('#end-multiplayer-game').hide();
-	    displayMessage('.player-quit');
-	  });
-
-	  var piecesPlayed = function piecesPlayed() {
-	    count = 0;
-	    for (var _i = 0; _i < board.length; _i++) {
-	      if ($(board[_i]).text() !== '') {
-	        count++;
-	      }
-	    }
-
-	    return count;
-	  };
 
 	  var createGame = function createGame(event) {
 	    event.preventDefault();
@@ -187,6 +172,25 @@ webpackJsonp([0],[
 	    }).fail(function (jqxhr) {
 	      console.error(jqxhr);
 	    });
+	  };
+
+	  $('#end-multiplayer-game').on('click', function () {
+	    endGame();
+	    $('.restart').show();
+	    $('#start-multiplayer-game').show();
+	    $('#end-multiplayer-game').hide();
+	    displayMessage('.player-quit');
+	  });
+
+	  var piecesPlayed = function piecesPlayed() {
+	    count = 0;
+	    for (var i = 0; i < board.length; i++) {
+	      if ($(board[i]).text() !== '') {
+	        count++;
+	      }
+	    }
+
+	    return count;
 	  };
 
 	  // vv signup actions vv
@@ -267,19 +271,19 @@ webpackJsonp([0],[
 	      type: 'GET',
 	      data: {}
 	    }).done(function (data) {
-	      for (var _i2 = 0; _i2 < data.games.length; _i2++) {
-	        if (data.games[_i2].player_o) {
-	          playerO = data.games[_i2].player_o.email;
+	      for (var i = 0; i < data.games.length; i++) {
+	        if (data.games[i].player_o) {
+	          playerO = data.games[i].player_o.email;
 	        } else {
 	          playerO = 'n/a';
 	        }
-	        if (data.games[_i2].player_x) {
-	          playerX = data.games[_i2].player_x.email;
+	        if (data.games[i].player_x) {
+	          playerX = data.games[i].player_x.email;
 	        } else {
 	          playerX = 'n/a';
 	        }
 
-	        $('.all-games').append('<tr><td>' + data.games[_i2].id + '</td><td>' + playerX + '</td><td>' + playerO + '</td><td>' + data.games[_i2].cells + '<td><button data-dismiss="modal" id=' + data.games[_i2].id + '>View</button></td></tr>');
+	        $('.all-games').append('<tr><td>' + data.games[i].id + '</td><td>' + playerX + '</td><td>' + playerO + '</td><td>' + data.games[i].cells + '<td><button data-dismiss="modal" id=' + data.games[i].id + '>View</button></td></tr>');
 	      }
 	    }).fail(function (jqxhr) {
 	      console.error(jqxhr);
@@ -345,16 +349,14 @@ webpackJsonp([0],[
 	  // takes the given board and removes all added text and classes,
 	  // and hides the "restart" div
 	  var resetBoard = function resetBoard() {
-	    for (var _i3 = 0; _i3 < board.length; _i3++) {
-	      $(board[_i3]).text('');
-	      $(board[_i3]).removeClass('blue');
-	      $(board[_i3]).removeClass('gray');
+	    for (var i = 0; i < board.length; i++) {
+	      $(board[i]).text('');
+	      $(board[i]).removeClass('blue');
+	      $(board[i]).removeClass('gray');
 	    }
 
 	    $('.restart').hide();
 	  };
-
-	  var timer = setInterval(reprint, 500);
 
 	  // vvvvvvv start multiplayer game actions vvvvvvv
 	  $('#start-multiplayer-game').on('click', function (event) {
@@ -385,8 +387,6 @@ webpackJsonp([0],[
 	  // vvvvvvv join game actions vvvvvvv
 	  $('#join-game').on('submit', function (event) {
 	    event.preventDefault();
-
-	    //var formData = new FormData(event.target);
 	    $.ajax({
 	      url: myApp.baseUrl + '/games/' + $('#inputGameID').val(),
 	      headers: {
@@ -408,7 +408,6 @@ webpackJsonp([0],[
 	      $('#end-multiplayer-game').show();
 	    }).fail(function (jqxhr) {
 	      console.error(jqxhr);
-	      console.log('you fucked up');
 	    });
 	  });
 
@@ -433,8 +432,8 @@ webpackJsonp([0],[
 	  var announceTie = function announceTie() {
 	    clearInterval(timer);
 	    tieCount++;
-	    for (var _i4 = 0; _i4 < board.length; _i4++) {
-	      $(board[_i4]).addClass('gray');
+	    for (var i = 0; i < board.length; i++) {
+	      $(board[i]).addClass('gray');
 	    }
 	    $('#end-multiplayer-game').hide();
 	    $('#start-multiplayer-game').show();
@@ -444,8 +443,8 @@ webpackJsonp([0],[
 	  };
 
 	  var boardIsFull = function boardIsFull() {
-	    for (var _i5 = 0; _i5 < board.length; _i5++) {
-	      if ($(board[_i5]).text() === '') {
+	    for (var i = 0; i < board.length; i++) {
+	      if ($(board[i]).text() === '') {
 	        return false;
 	      }
 	    }
@@ -454,18 +453,18 @@ webpackJsonp([0],[
 	  };
 
 	  var loadOldBoard = function loadOldBoard() {
-	    for (var _i6 = 0; _i6 < board.length; _i6++) {
-	      $(board[_i6]).text(archivedBoard[_i6]);
+	    for (var i = 0; i < board.length; i++) {
+	      $(board[i]).text(archivedBoard[i]);
 	    }
 	  };
 
 	  var findAndAnnounceWinner = function findAndAnnounceWinner(event) {
-	    for (var _i7 = 0; _i7 < winningCombos.length; _i7++) {
+	    for (var i = 0; i < winningCombos.length; i++) {
 	      var a, b, c;
 
-	      a = board[winningCombos[_i7][0]];
-	      b = board[winningCombos[_i7][1]];
-	      c = board[winningCombos[_i7][2]];
+	      a = board[winningCombos[i][0]];
+	      b = board[winningCombos[i][1]];
+	      c = board[winningCombos[i][2]];
 
 	      if ($(a).text() !== '' && $(a).text() === $(b).text() && $(a).text() === $(c).text()) {
 	        $(a).addClass('blue');
@@ -504,8 +503,8 @@ webpackJsonp([0],[
 	      type: 'GET',
 	      data: {}
 	    }).done(function (data) {
-	      for (var _i8 = 0; _i8 < data.game.cells.length; _i8++) {
-	        archivedBoard[_i8] = data.game.cells[_i8];
+	      for (var i = 0; i < data.game.cells.length; i++) {
+	        archivedBoard[i] = data.game.cells[i];
 	      }
 
 	      loadOldBoard();
@@ -534,6 +533,26 @@ webpackJsonp([0],[
 	    loserGoesFirst();
 	    createGame(event);
 	  });
+
+	  var getUpdatedBoard = function getUpdatedBoard() {
+	    $.ajax({
+	      url: myApp.baseUrl + '/games/' + myApp.game.id,
+	      headers: {
+	        Authorization: 'Token token=' + myApp.user.token
+	      },
+	      type: 'GET',
+	      data: {}
+	    }).done(function (data) {
+	      console.log(data);
+	      myApp.game = data.game;
+	      for (var i = 0; i < board.length; i++) {
+	        $(board[i]).text(myApp.game.cells[i]);
+	      }
+	      console.log('board updated FROM server');
+	    }).fail(function (jqxhr) {
+	      console.error(jqxhr);
+	    });
+	  };
 
 	  // sends the updated square back to the server via the api, then updates
 	  // the game board with a copy of the updated data
@@ -565,33 +584,11 @@ webpackJsonp([0],[
 	    });
 	  };
 
-	  var getUpdatedBoard = function getUpdatedBoard() {
-	    $.ajax({
-	      url: myApp.baseUrl + '/games/' + myApp.game.id,
-	      headers: {
-	        Authorization: 'Token token=' + myApp.user.token
-	      },
-	      type: 'GET',
-	      data: {}
-	    }).done(function (data) {
-	      console.log(data);
-	      myApp.game = data.game;
-	      for (var _i9 = 0; _i9 < board.length; _i9++) {
-	        $(board[_i9]).text(myApp.game.cells[_i9]);
-	      }
-	      console.log('board updated FROM server');
-	    }).fail(function (jqxhr) {
-	      console.error(jqxhr);
-	    });
-	  };
-
-	  var i = 0;
 	  var reprint = function reprint(e) {
 	    if (!myApp.game.over) {
-	      console.log('start reprint');
 	      getUpdatedBoard();
-	      i++;
-	      console.log(i);
+	      timerSeconds++;
+	      console.log(timerSeconds);
 	      console.log('game ' + myApp.game.id + ' is over - true or false? ' + myApp.game.over);
 	      if (findAndAnnounceWinner(e)) {
 	        updateProgressBars();
