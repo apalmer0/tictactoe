@@ -129,6 +129,12 @@ webpackJsonp([0],[
 	    displayMessage('.deathmatch-started');
 	  });
 
+	  var updateScoreboard = function updateScoreboard() {
+	    $('#xWins').text(xWinCount);
+	    $('#oWins').text(oWinCount);
+	    $('#ties').text(tieCount);
+	  };
+
 	  var createGame = function createGame(event) {
 	    event.preventDefault();
 	    var formData = new FormData(event.target);
@@ -584,28 +590,33 @@ webpackJsonp([0],[
 	    });
 	  };
 
+	  // during a multiplayer game, this code gets run every 1000ms. it updates the
+	  // board (sends state to the server, and reprints the board based on what it
+	  // gets back). if the game is over, it determines whether the game was won or
+	  // if someone resigned.
 	  var reprint = function reprint(e) {
 	    if (!myApp.game.over) {
 	      getUpdatedBoard();
 	      timerSeconds++;
 	      console.log(timerSeconds);
 	      console.log('game ' + myApp.game.id + ' is over - true or false? ' + myApp.game.over);
+	    } else {
 	      if (findAndAnnounceWinner(e)) {
 	        updateProgressBars();
-	        $('#xWins').text(xWinCount);
-	        $('#oWins').text(oWinCount);
-	        $('#ties').text(tieCount);
+	        updateScoreboard();
 	        $('.restart').show();
+	      } else {
+	        displayMessage('.opp-quit');
+	        $('#end-multiplayer-game').hide();
+	        $('#start-multiplayer-game').show();
+	        $('.restart').show();
+	        endGame(e);
 	      }
-	    } else {
-	      displayMessage('.opp-quit');
-	      $('#end-multiplayer-game').hide();
-	      $('#start-multiplayer-game').show();
-	      $('.restart').show();
-	      endGame(e);
 	    }
 	  };
 
+	  // square click logic - the first half accounts for single player games, the
+	  // latter half for multiplayer games.
 	  $('.square').on('click', function (e) {
 	    if (players === 1) {
 	      if (count % 2 === 0) {
@@ -640,9 +651,7 @@ webpackJsonp([0],[
 
 	    if (findAndAnnounceWinner(e)) {
 	      updateProgressBars();
-	      $('#xWins').text(xWinCount);
-	      $('#oWins').text(oWinCount);
-	      $('#ties').text(tieCount);
+	      updateScoreboard();
 	      $('.restart').show();
 	    }
 	  });
