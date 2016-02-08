@@ -6,7 +6,7 @@
 
 ## Mockup
 
-    <img src="assets/images/mockup.jpg">
+  ![Mockup](assets/images/mockup.jpg?raw=true)
 
 ## About
 
