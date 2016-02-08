@@ -203,13 +203,15 @@
                 <div class="form-group row">
                   <label for="inputEmail3" class="col-sm-2 form-control-label">Email</label>
                   <div class="col-sm-10">
-                    <input type="email" class="form-control" id="inputEmail3" placeholder="email" name="credentials[email]" value="">
+                    <input type="email" class="form-control" id="inputEmail3" placeholder="email" name="credentials[email]" value="" aria-describedby="helpBlock1">
+                    <span id="helpBlock1" class="sign-up-hint">Don't use a real email address. This connection is not secure.</span>
                   </div>
                 </div>
                 <div class="form-group row">
                   <label for="inputPassword3" class="col-sm-2 form-control-label">Password</label>
                   <div class="col-sm-10">
-                    <input type="password" class="form-control" id="inputPassword3" placeholder="password"name="credentials[password]" value="">
+                    <input type="password" class="form-control" id="inputPassword3" placeholder="password" name="credentials[password]" value="" aria-describedby="helpBlock2">
+                    <span id="helpBlock2" class="sign-up-hint">Don't use a real password. This connection is not secure.</span>
                   </div>
                 </div>
               </div>

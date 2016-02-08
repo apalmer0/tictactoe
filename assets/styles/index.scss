@@ -8,6 +8,7 @@ $white: #fff;
 $black: #000;
 $blue: #0198e1;
 $gray: #282828;
+$light-gray: #d3d3d3;
 $red: #f00;
 $image-width: 100%;
 
@@ -70,6 +71,12 @@ table {
   height: 1000px;
   margin-top: 50px;
   width: 100%;
+}
+
+.sign-up-hint {
+  color: $light-gray;
+  font-family: sans-serif;
+  font-size: 75%;
 }
 
 .section1 {
