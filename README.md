@@ -6,7 +6,7 @@
 
 ## Mockup
 
-  ![Mockup](assets/images/mockup.jpg?raw=true)
+  ![Mockup](assets/images/mockup.JPG?raw=true)
 
 ## About
 
