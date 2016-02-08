@@ -6,9 +6,7 @@
 
 ## Mockup
 
-    ```
     ![Basic tic tac toe mockup](/files/assets/images/mockup.jpg)
-    ```
 
 ## About
 
