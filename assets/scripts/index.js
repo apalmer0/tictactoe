@@ -148,6 +148,8 @@ $(document).ready(() => {
       console.log('game is over - true or false? '+myApp.game.over);
       console.log('game ended');
       clearInterval(timer);
+      $('#end-multiplayer-game').hide();
+      $('#start-multiplayer-game').show();
       players = 1;
 
     }).fail(function (jqxhr) {
@@ -354,6 +356,7 @@ $(document).ready(() => {
       resetBoard();
       timer = setInterval(reprint,1000);
       players = 2;
+      marker = 'X';
       $('#multiplayerGameID').text(data.game.id);
       $('.game-number').text(myApp.game.id);
       $('#start-multiplayer-game').hide();
